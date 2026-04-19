@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<!-- <meta name="viewport" content="width=device-width, initial-scale=1.0"/> -->
+<title>Captured — A Visual Journal</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Outfit:wght@200;300;400;500&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=Cinzel:wght@400;500;600;700&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap">
+<link rel="stylesheet" href="css/stories.css">
+</head>
+<body>
+
+<!-- <div class="grain-overlay" aria-hidden="true"></div>  -->
+<div class="cursor-dot"></div>
+<div class="cursor-ring"></div>
+<div class="scroll-progress"></div>
+
+<!-- ════════ HERO ════════ -->
+<header id="navbar">
+  <div class="container navbar-inner">
+    <a href="index.html" class="logo">
+      <div class="logo-img-wrap"><img src="assets/logo_1776338153641.png" alt="Hussain Mahmud Photography" class="logo-img" /></div>
+      <div class="logo-text"><span class="logo-name">Hussain</span><span class="logo-sub">Photography</span></div>
+    </a>
+    <nav class="desktop-nav">
+      <a href="index.html"     class="nav-link">Home</a>
+      <a href="portfolio.html" class="nav-link">Portfolio</a>
+      <a href="about.html"     class="nav-link">About</a>
+      <a href="contact.html"   class="nav-link">Contact</a>
+      <a href="stories.html"   class="nav-link">Stories</a>
+      <a href="contact.html"   class="nav-btn">Hire Me</a>
+    </nav>
+    <button class="mobile-toggle" id="menuToggle" aria-label="Toggle menu">
+      <svg id="iconOpen" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      <svg id="iconClose" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+</header>
+
+<div class="mobile-menu" id="mobileMenu">
+  <div class="mobile-menu-logo">
+    <img src="assets/logo_1776338153641.png" alt="Logo" />
+    <span>Hussain Mahmud Photography</span>
+  </div>
+  <a href="index.html"     class="mobile-nav-link">Home</a>
+  <a href="portfolio.html" class="mobile-nav-link">Portfolio</a>
+  <a href="about.html"
+class="mobile-nav-link">About</a>
+  <a href="contact.html"   class="mobile-nav-link">Contact</a>
+  <a href="stories.html" class="mobile-nav-link active">Stories</a>
+  <a href="contact.html"   class="mobile-nav-btn">Get In Touch</a>
+</div>
+
+<div class="site-header">
+    
+    <div class="hdr-bg"><img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1800&q=90" alt=""></div>
+  <div class="hdr-fade"></div>
+
+  <div class="hdr-top">
+   
+    <!-- <div class="hdr-right">
+      <button class="btn-add" id="openAdd">＋ New Story</button>
+    </div> -->
+  </div>
+
+  <div class="hdr-hero">
+      <div class="hdr-right">
+      <button class="btn-add" id="openAdd">＋ New Story</button>
+    </div>
+    <p class="hero-eyebrow">A Visual Journal · Vol. I</p>
+    <h1 class="hero-title">Every Frame<br>Holds a <em>Secret</em></h1>
+    <p class="hero-sub">Moments captured through a lens. Each photograph hides a story waiting to be told.</p>
+  </div>
+
+  <div class="hero-scroll-hint">
+    <div class="scroll-bar"></div>
+    <span>Scroll</span>
+  </div>
+    
+</div>
+
+<!-- ════════ FILTER BAR ════════ -->
+<div class="filter-bar">
+  <div class="filter-inner">
+    <ul class="filter-tabs" id="filterTabs">
+      <li class="ftab on" data-f="all">All</li>
+      <li class="ftab" data-f="Nature">Nature</li>
+      <li class="ftab" data-f="Flower">Flower</li>
+      <li class="ftab" data-f="Macro">Macro</li>
+      <li class="ftab" data-f="Memory">Memory</li>
+    </ul>
+    <div class="filter-count"><b id="countNum">6</b> stories</div>
+  </div>
+</div>
+
+<!-- ════════ GRID ════════ -->
+<main class="main">
+  <div class="grid" id="grid"></div>
+</main>
+
+<!-- ════════ QUOTE ════════ -->
+<div class="quote-section">
+  <div class="q-line"></div>
+  <p class="q-text">"Some pictures are not taken to show the world, but to remember how it felt."</p>
+  <div class="q-line"></div>
+</div>
+
+<!-- ════════ FOOTER ════════ -->
+
+
+
+<!-- ════════ VIEW MODAL ════════ -->
+<div class="modal-wrap" id="modalWrap">
+  <div class="modal-bg" id="modalBg"></div>
+  <div class="modal-panel">
+
+    <!-- Left: full-bleed photo -->
+    <div class="modal-photo">
+      <img id="mImg" src="" alt=""/>
+      <div class="modal-photo-info">
+        <span class="m-chip" id="mChip"></span>
+        <div class="m-loc"    id="mLoc"></div>
+        <div class="m-season" id="mSeason"></div>
+      </div>
+    </div>
+
+    <!-- Right: scrollable content — close button lives HERE -->
+    <div class="modal-content" id="mScroll">
+      <button class="modal-close" id="modalClose" aria-label="Close story">✕</button>
+      <p  class="m-eye"   id="mEye"></p>
+      <h2 class="m-title" id="mTitle"></h2>
+      <p  class="m-sub"   id="mSub"></p>
+      <div class="m-rule"></div>
+      <div class="m-story" id="mStory"></div>
+      <!-- Prev / Next navigation -->
+<div class="modal-nav">
+  <button class="modal-nav-btn prev" id="modalPrev">Prev</button>
+  <span class="modal-nav-counter"><span id="navCurrent">1</span> / <span id="navTotal">6</span></span>
+  <button class="modal-nav-btn next" id="modalNext">Next</button>
+</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ════════ ADD STORY ════════ -->
+<div class="add-wrap" id="addWrap">
+  <div class="add-bg"></div>
+  <div class="add-panel">
+    <button class="add-close" id="closeAdd" aria-label="Close">✕</button>
+    <div class="add-scroll">
+      <p class="add-eyebrow">New Entry</p>
+      <h2 class="add-heading">Add your <em>Story</em></h2>
+      <div class="add-rule"></div>
+
+      <div class="f-block">
+        <label class="f-label">Photo URL</label>
+        <input class="f-in" id="nImg" type="url" placeholder="https://images.unsplash.com/…"/>
+      </div>
+      <div class="f-block">
+        <label class="f-label">Title</label>
+        <input class="f-in" id="nTitle" placeholder="Name this moment"/>
+      </div>
+      <div class="f-block">
+        <label class="f-label">Subtitle</label>
+        <input class="f-in" id="nSub" placeholder="One line that captures the feeling"/>
+      </div>
+      <div class="f-block">
+        <label class="f-label">Your Story</label>
+        <textarea class="f-ta" id="nStory" placeholder="Write it freely…"></textarea>
+      </div>
+      <div class="f-row">
+        <div class="f-block">
+          <label class="f-label">Category</label>
+          <input class="f-in" id="nCat" placeholder="Nature, City…"/>
+        </div>
+        <div class="f-block">
+          <label class="f-label">Location</label>
+          <input class="f-in" id="nLoc" placeholder="Where it happened"/>
+        </div>
+      </div>
+      <div class="f-block">
+        <label class="f-label">Season</label>
+        <input class="f-in" id="nSeason" placeholder="e.g. Early Autumn"/>
+      </div>
+      <button class="submit-btn" id="doSubmit">Publish Story →</button>
+    </div>
+  </div>
+</div>
+
+<!-- Footer -->
+
+<footer>
+  <div class="footer-rule"></div>
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div>
+        <a href="index.html" class="logo" style="margin-bottom:20px;display:inline-flex">
+          <div class="logo-img-wrap"><img src="assets/logo_1776338153641.png" alt="Logo" class="logo-img" style="width:48px;height:48px" /></div>
+          <div class="logo-text"><span class="logo-name" style="font-size:1rem">Hussain Mahmud</span><span class="logo-sub">Photography</span></div>
+        </a>
+        <p class="footer-brand-desc">Capturing the extraordinary within the ordinary — macro worlds, harbor silhouettes, and street life from Rajbari, Dhaka, Bangladesh.</p>
+        <div class="footer-contact-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Rajbari, Dhaka, Bangladesh</div>
+        <a href="mailto:jnm309249@gmail.com" class="footer-contact-row" style="text-decoration:none"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px"><rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="22,4 12,13 2,4"/></svg>jnm309249@gmail.com</a>
+      </div>
+      <div>
+        <h4 class="footer-col-title">Explore</h4>
+        <a href="index.html"     class="footer-link"><span class="footer-link-line"></span>Home</a>
+        <a href="portfolio.html" class="footer-link"><span class="footer-link-line"></span>Portfolio</a>
+        <a href="about.html"     class="footer-link"><span class="footer-link-line"></span>About</a>
+        <a href="contact.html"   class="footer-link"><span class="footer-link-line"></span>Contact</a>
+        <a href="stories.html"   class="footer-link"><span class="footer-link-line"></span>Stories</a>
+      </div>
+      <div>
+        <h4 class="footer-col-title">Connect</h4>
+        <a href="https://www.facebook.com/hmphoto19graphs?mibextid=ZbWKwL" target="_blank" rel="noopener" class="footer-link"><span class="footer-link-line"></span>Facebook</a>
+        <a href="https://www.instagram.com/hmphoto9" target="_blank" rel="noopener" class="footer-link"><span class="footer-link-line"></span>Instagram</a>
+        <a href="https://m.me/ch/Abam3cOYRQPn8sER/" target="_blank" rel="noopener" class="footer-link"><span class="footer-link-line"></span>Messenger</a>
+      </div>
+      <div>
+        <h4 class="footer-col-title">Recent Shots</h4>
+        <div class="footer-thumbs">
+          <div class="footer-thumb"><img src="assets/Photo4_1776338153984.jpg" alt="" /></div>
+          <div class="footer-thumb"><img src="assets/Photo1_1776338153859.jpg" alt="" /></div>
+          <div class="footer-thumb"><img src="assets/20260318_135147_1776340170896.jpg" alt="" /></div>
+          <div class="footer-thumb"><img src="assets/PXL_20260321_122043556_1776340171117.jpg" alt="" /></div>
+          <div class="footer-thumb"><img src="assets/PXL_20231025_164423266_1776340171141.jpg" alt="" /></div>
+          <div class="footer-thumb"><img src="assets/PXL_20240105_113433807.PORTRAIT_1776340171070.jpg" alt="" /></div>
+        </div>
+        <a href="portfolio.html" class="footer-view-all">View all <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a>
+      </div>
+    </div>
+    <div class="footer-rule-bottom"></div>
+    <div class="footer-bottom">
+      <p class="footer-copyright">© <span id="year"></span> Hussain Mahmud Photography — All rights reserved</p>
+      <p class="footer-tagline text-grad-footer">Rajbari · Dhaka · Bangladesh</p>
+    </div>
+  </div>
+</footer>
+
+<!-- ════════ JAVASCRIPT ════════ -->
+
+<script src="js/stories.js"></script>
+
+</body>
+</html>

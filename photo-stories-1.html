@@ -1,0 +1,1304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Captured — A Visual Journal</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Outfit:wght@200;300;400;500&display=swap" rel="stylesheet"/>
+<style>
+
+/* ================================================
+   BASE
+================================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --black: #000000;
+  --surface: #0a0a0f;
+  --white: #F3EEE7;
+  --gold: #ff9d00;
+  --gold2: #ffdc00;
+  --muted: rgba(243,238,231,0.45);
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* Liquid-glass tokens */
+  --glass-bg: rgba(255,255,255,0.06);
+  --glass-border: rgba(255,255,255,0.12);
+  --glass-blur: blur(24px) saturate(1.4);
+  --glass-shadow: 0 8px 40px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.08);
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--black);
+  color: var(--white);
+  font-family: 'Outfit', sans-serif;
+  font-weight: 300;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Film grain — subtle, adds depth */
+body::after {
+  content: '';
+  position: fixed; inset: 0; z-index: 9998;
+  pointer-events: none;
+  opacity: 0.028;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.78' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+}
+
+/* ================================================
+   HERO HEADER
+================================================ */
+.site-header {
+  position: relative;
+  height: 100svh;
+  min-height: 580px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.hdr-bg {
+  position: absolute; inset: 0;
+  background: url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1800&q=90') center/cover no-repeat;
+  transform: scale(1.1);
+  animation: bgDrift 22s ease-in-out infinite alternate;
+  filter: brightness(0.32) saturate(0.75);
+}
+@keyframes bgDrift {
+  from { transform: scale(1.1) translate(0,0); }
+  to   { transform: scale(1.18) translate(-1.5%, 1%); }
+}
+
+/* Strong bottom fade — no seam between hero and grid */
+.hdr-fade {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  height: 50%;
+  background: linear-gradient(to bottom, transparent, #000);
+  pointer-events: none;
+}
+
+/* Top bar */
+.hdr-top {
+  position: relative; z-index: 3;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 28px 40px;
+}
+
+.logo {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.15rem; font-weight: 400;
+  letter-spacing: 0.07em;
+  color: var(--white);
+  opacity: 0;
+  animation: fadeDown 0.8s 0.1s var(--ease) forwards;
+}
+.logo em { color: var(--gold); font-style: italic; }
+
+.hdr-right {
+  display: flex; align-items: center; gap: 28px;
+  opacity: 0;
+  animation: fadeDown 0.8s 0.2s var(--ease) forwards;
+}
+
+.nav-link {
+  font-size: 0.68rem; font-weight: 400;
+  letter-spacing: 0.22em; text-transform: uppercase;
+  color: rgba(243,238,231,0.5);
+  text-decoration: none;
+  transition: color 0.25s;
+}
+.nav-link:hover { color: var(--white); }
+
+/* "＋ New Story" glass pill button */
+.btn-add {
+  display: flex; align-items: center; gap: 8px;
+  padding: 9px 20px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.68rem; font-weight: 400;
+  letter-spacing: 0.22em; text-transform: uppercase;
+  color: var(--gold);
+  background: rgba(201,169,110,0.08);
+  border: 1px solid rgba(201,169,110,0.35);
+  border-radius: 999px;
+  cursor: pointer;
+  backdrop-filter: blur(12px);
+  transition: background 0.25s, color 0.25s, border-color 0.25s;
+}
+.btn-add:hover {
+  background: var(--gold);
+  color: #000;
+  border-color: var(--gold);
+}
+
+/* Hero text block */
+.hdr-hero {
+  position: relative; z-index: 3;
+  flex: 1;
+  display: flex; flex-direction: column;
+  justify-content: flex-end;
+  padding: 0 40px 56px;
+}
+
+.hero-eyebrow {
+  font-size: 0.65rem; font-weight: 400;
+  letter-spacing: 0.5em; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 18px;
+  opacity: 0; animation: fadeUp 0.9s 0.45s var(--ease) forwards;
+}
+
+.hero-title {
+  font-family: 'Playfair Display', serif;
+  font-weight: 700;
+  font-size: clamp(3rem, 8vw, 7.5rem);
+  line-height: 0.93; letter-spacing: -0.01em;
+  max-width: 680px;
+  opacity: 0; animation: fadeUp 1s 0.58s var(--ease) forwards;
+}
+.hero-title em { font-style: italic; font-weight: 400; color: var(--gold); }
+
+.hero-sub {
+  margin-top: 22px;
+  font-size: 0.93rem; font-weight: 300;
+  color: var(--muted); max-width: 400px; line-height: 1.75;
+  opacity: 0; animation: fadeUp 1s 0.72s var(--ease) forwards;
+}
+
+.hero-scroll-hint {
+  position: absolute; right: 40px; bottom: 40px;
+  display: flex; flex-direction: column; align-items: center; gap: 10px;
+  opacity: 0; animation: fadeIn 1s 1.3s both;
+}
+.hero-scroll-hint span {
+  font-size: 0.58rem; letter-spacing: 0.45em; text-transform: uppercase;
+  color: rgba(243,238,231,0.28); writing-mode: vertical-rl;
+}
+.scroll-bar {
+  width: 1px; height: 52px;
+  background: linear-gradient(to bottom, var(--gold), transparent);
+  animation: scrollPulse 2.2s ease-in-out infinite 1.5s;
+}
+@keyframes scrollPulse {
+  0%,100% { opacity: 0.5; transform: scaleY(1); transform-origin: top; }
+  50%      { opacity: 1;   transform: scaleY(0.55); transform-origin: top; }
+}
+
+/* ================================================
+   FILTER / NAV BAR
+================================================ */
+.filter-bar {
+  position: sticky; top: 0; z-index: 400;
+  background: rgba(0,0,0,0.75);
+  backdrop-filter: blur(28px) saturate(0.6);
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+
+.filter-inner {
+  max-width: 1380px; margin: 0 auto;
+  padding: 0 40px; height: 54px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+
+.filter-tabs { display: flex; gap: 0; list-style: none; height: 100%; }
+
+.ftab {
+  position: relative;
+  height: 100%;
+  display: flex; align-items: center;
+  padding: 0 20px;
+  font-size: 0.66rem; font-weight: 400;
+  letter-spacing: 0.32em; text-transform: uppercase;
+  color: rgba(243,238,231,0.38);
+  cursor: pointer;
+  transition: color 0.3s;
+  user-select: none; white-space: nowrap;
+}
+.ftab::after {
+  content: '';
+  position: absolute; bottom: 0; left: 20px; right: 20px;
+  height: 1.5px;
+  background: linear-gradient(90deg, var(--gold), var(--gold2));
+  transform: scaleX(0); transform-origin: left;
+  transition: transform 0.4s var(--ease);
+}
+.ftab:hover { color: rgba(243,238,231,0.7); }
+.ftab.on    { color: var(--white); }
+.ftab.on::after { transform: scaleX(1); }
+
+.filter-count {
+  font-size: 0.66rem; letter-spacing: 0.18em;
+  color: rgba(243,238,231,0.28);
+  white-space: nowrap;
+}
+.filter-count b {
+  font-family: 'Playfair Display', serif;
+  font-weight: 400; font-size: 1rem;
+  color: var(--gold); margin-right: 3px;
+}
+
+/* ================================================
+   GRID
+================================================ */
+.main {
+  max-width: 1380px; margin: 0 auto;
+  padding: 48px 40px 96px;
+}
+
+/* 12-column asymmetric grid.
+   We assign spans so cards have natural rhythm:
+   [8] [4]  →  first two cards (hero + portrait)
+   [4] [4] [4] →  three equal cards
+   [6] [6]  →  two wide cards
+   Extra cards wrap back into this rhythm. */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 18px;
+  align-items: start;
+}
+
+/* ================================================
+   CARDS — Liquid Glass Style
+================================================ */
+.card {
+  position: relative;
+  border-radius: 20px;
+  overflow: hidden;
+  cursor: pointer;
+
+  /* Liquid glass shell */
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  backdrop-filter: var(--glass-blur);
+
+  /* Entry animation */
+  opacity: 0;
+  transform: translateY(36px) scale(0.98);
+  transition:
+    box-shadow 0.5s var(--ease),
+    border-color 0.4s,
+    transform 0.5s var(--ease);
+}
+
+.card.visible {
+  animation: cardReveal 0.75s var(--ease) forwards;
+}
+@keyframes cardReveal {
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* Hover: lift + gold glow */
+.card:hover {
+  box-shadow:
+    0 0 0 1px rgba(201,169,110,0.4),
+    0 24px 64px rgba(0,0,0,0.7),
+    0 0 60px rgba(201,169,110,0.07),
+    inset 0 1px 0 rgba(255,255,255,0.12);
+  border-color: rgba(201,169,110,0.38);
+  transform: translateY(-5px) scale(1.005);
+}
+
+/* ── Photo ── */
+.card-photo {
+  position: relative;
+  overflow: hidden;
+  /* border-radius matches card top */
+  border-radius: 18px 18px 0 0;
+}
+
+.card-photo img {
+  display: block; width: 100%; height: 100%;
+  object-fit: cover;
+  filter: saturate(0.78) brightness(0.7);
+  transition: transform 0.85s var(--ease), filter 0.55s;
+}
+.card:hover .card-photo img {
+  transform: scale(1.07);
+  filter: saturate(0.95) brightness(0.85);
+}
+
+/* Deep gradient so text always readable */
+.card-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(
+    160deg,
+    rgba(201,169,110,0.04) 0%,
+    transparent 35%,
+    rgba(0,0,0,0.55) 65%,
+    rgba(0,0,0,0.95) 100%
+  );
+  transition: opacity 0.4s;
+}
+.card:hover .card-overlay { opacity: 0.82; }
+
+/* Gradient colour wash: unique per card via nth-child tinting */
+.card:nth-child(1) .card-overlay { background: linear-gradient(160deg, rgba(120,80,200,0.12) 0%, transparent 40%, rgba(0,0,0,0.92) 100%); }
+.card:nth-child(2) .card-overlay { background: linear-gradient(160deg, rgba(200,80,100,0.1)  0%, transparent 40%, rgba(0,0,0,0.92) 100%); }
+.card:nth-child(3) .card-overlay { background: linear-gradient(160deg, rgba(40,160,140,0.1)  0%, transparent 40%, rgba(0,0,0,0.92) 100%); }
+.card:nth-child(4) .card-overlay { background: linear-gradient(160deg, rgba(200,140,40,0.1)  0%, transparent 40%, rgba(0,0,0,0.92) 100%); }
+.card:nth-child(5) .card-overlay { background: linear-gradient(160deg, rgba(60,100,200,0.12) 0%, transparent 40%, rgba(0,0,0,0.92) 100%); }
+.card:nth-child(6) .card-overlay { background: linear-gradient(160deg, rgba(160,40,160,0.1)  0%, transparent 40%, rgba(0,0,0,0.92) 100%); }
+
+/* Gold shimmer sweep on hover */
+.card::before {
+  content: '';
+  position: absolute; inset: 0; z-index: 2;
+  background: linear-gradient(110deg, transparent 30%, rgba(201,169,110,0.07) 50%, transparent 70%);
+  transform: translateX(-100%);
+  transition: transform 0.7s var(--ease);
+  pointer-events: none;
+  border-radius: 20px;
+}
+.card:hover::before { transform: translateX(100%); }
+
+/* Category chip — frosted glass pill */
+.card-chip {
+  position: absolute; top: 14px; left: 14px; z-index: 3;
+  font-size: 0.58rem; font-weight: 500;
+  letter-spacing: 0.32em; text-transform: uppercase;
+  color: var(--white);
+  background: rgba(0,0,0,0.5);
+  border: 1px solid rgba(255,255,255,0.15);
+  padding: 5px 12px;
+  border-radius: 999px;
+  backdrop-filter: blur(12px);
+  transition: border-color 0.3s, color 0.3s, background 0.3s;
+}
+.card:hover .card-chip {
+  border-color: rgba(201,169,110,0.5);
+  color: var(--gold);
+  background: rgba(0,0,0,0.6);
+}
+
+/* Index number */
+.card-index {
+  position: absolute; top: 14px; right: 16px; z-index: 3;
+  font-family: 'Playfair Display', serif;
+  font-size: 0.7rem; color: rgba(201,169,110,0.5);
+  letter-spacing: 0.08em;
+}
+
+/* Text block at bottom of photo */
+.card-text {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  padding: 20px 20px 22px; z-index: 3;
+}
+
+.card-loc {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 0.6rem; font-weight: 400;
+  letter-spacing: 0.38em; text-transform: uppercase;
+  color: var(--gold); opacity: 0.9; margin-bottom: 8px;
+}
+.card-loc::before {
+  content: '';
+  flex-shrink: 0; width: 12px; height: 1px; background: var(--gold);
+}
+
+.card-title {
+  font-family: 'Playfair Display', serif;
+  font-weight: 700; line-height: 1.15;
+  color: var(--white);
+  transition: color 0.3s;
+}
+.card:hover .card-title { color: var(--gold2); }
+
+/* Subtitle: hidden by default, slides up on hover */
+.card-sub {
+  font-size: 0.78rem; font-weight: 300;
+  color: rgba(243,238,231,0.55); line-height: 1.58;
+  margin-top: 6px;
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+  transition: max-height 0.48s var(--ease), opacity 0.4s;
+}
+.card:hover .card-sub { max-height: 90px; opacity: 1; }
+
+/* Read row — appears on hover */
+.card-action {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-top: 10px;
+  opacity: 0; transform: translateY(8px);
+  transition: opacity 0.38s 0.06s, transform 0.38s 0.06s var(--ease);
+}
+.card:hover .card-action { opacity: 1; transform: translateY(0); }
+
+.card-cta {
+  font-size: 0.6rem; font-weight: 400;
+  letter-spacing: 0.38em; text-transform: uppercase;
+  color: rgba(243,238,231,0.55);
+}
+
+/* Circular arrow button */
+.card-arrow {
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  border: 1px solid rgba(201,169,110,0.35);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; color: var(--gold);
+  transition: background 0.3s, transform 0.45s var(--ease), border-color 0.3s;
+}
+.card:hover .card-arrow {
+  background: var(--gold); color: #000;
+  border-color: var(--gold); transform: rotate(45deg);
+}
+
+/* Gold bottom accent line */
+.card-line {
+  position: absolute; bottom: 0; left: 0; right: 0; z-index: 4;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--gold), var(--gold2), transparent);
+  transform: scaleX(0); transform-origin: left;
+  transition: transform 0.6s var(--ease);
+}
+.card:hover .card-line { transform: scaleX(1); }
+
+/* ── Grid layout: sizes by slot ──
+   Slot 0 → 8 cols, tall
+   Slot 1 → 4 cols, tall
+   Slot 2,3,4 → 4 cols each
+   Slot 5 → 6 cols
+   Slot 6 → 6 cols
+   Then wraps → all 6 cols */
+.card[data-slot="0"] { grid-column: span 8; }
+.card[data-slot="0"] .card-photo { height: 540px; }
+.card[data-slot="0"] .card-title { font-size: 1.9rem; }
+
+.card[data-slot="1"] { grid-column: span 4; }
+.card[data-slot="1"] .card-photo { height: 540px; }
+.card[data-slot="1"] .card-title { font-size: 1.15rem; }
+
+.card[data-slot="2"] { grid-column: span 4; }
+.card[data-slot="2"] .card-photo { height: 360px; }
+.card[data-slot="2"] .card-title { font-size: 1.1rem; }
+
+.card[data-slot="3"] { grid-column: span 4; }
+.card[data-slot="3"] .card-photo { height: 360px; }
+.card[data-slot="3"] .card-title { font-size: 1.1rem; }
+
+.card[data-slot="4"] { grid-column: span 4; }
+.card[data-slot="4"] .card-photo { height: 360px; }
+.card[data-slot="4"] .card-title { font-size: 1.1rem; }
+
+.card[data-slot="5"] { grid-column: span 6; }
+.card[data-slot="5"] .card-photo { height: 420px; }
+.card[data-slot="5"] .card-title { font-size: 1.4rem; }
+
+.card[data-slot="6"] { grid-column: span 6; }
+.card[data-slot="6"] .card-photo { height: 420px; }
+.card[data-slot="6"] .card-title { font-size: 1.4rem; }
+
+/* Overflow slots → half width */
+.card[data-slot="7"],.card[data-slot="8"],.card[data-slot="9"] {
+  grid-column: span 6;
+}
+.card[data-slot="7"] .card-photo,
+.card[data-slot="8"] .card-photo,
+.card[data-slot="9"] .card-photo { height: 380px; }
+.card[data-slot="7"] .card-title,
+.card[data-slot="8"] .card-title,
+.card[data-slot="9"] .card-title { font-size: 1.2rem; }
+
+/* ================================================
+   QUOTE DIVIDER
+================================================ */
+.quote-section {
+  max-width: 1380px; margin: 0 auto;
+  padding: 0 40px 80px;
+  display: flex; align-items: center; gap: 36px;
+}
+.q-line {
+  flex: 1; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(201,169,110,0.22), transparent);
+}
+.q-text {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-size: clamp(0.95rem, 1.8vw, 1.25rem);
+  color: rgba(243,238,231,0.28);
+  text-align: center; line-height: 1.7;
+  max-width: 480px; flex-shrink: 0;
+}
+
+/* ================================================
+   FOOTER
+================================================ */
+.site-footer {
+  max-width: 1380px; margin: 0 auto;
+  padding: 24px 40px;
+  border-top: 1px solid rgba(255,255,255,0.04);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.footer-brand {
+  font-family: 'Playfair Display', serif;
+  font-style: italic; font-size: 0.95rem;
+  color: rgba(243,238,231,0.25);
+}
+.footer-copy {
+  font-size: 0.6rem; letter-spacing: 0.25em;
+  color: rgba(243,238,231,0.18); text-transform: uppercase;
+}
+
+/* ================================================
+   MODAL — full-screen takeover
+   Close button EXISTS only here (not globally fixed)
+================================================ */
+.modal-wrap {
+  position: fixed; inset: 0; z-index: 1000;
+  pointer-events: none;
+  visibility: hidden;
+}
+.modal-wrap.open {
+  pointer-events: all;
+  visibility: visible;
+}
+
+/* Dark frosted backdrop */
+.modal-bg {
+  position: absolute; inset: 0;
+  background: rgba(0,0,0,0.88);
+  backdrop-filter: blur(36px) saturate(0.25);
+  opacity: 0;
+  transition: opacity 0.45s var(--ease);
+}
+.modal-wrap.open .modal-bg { opacity: 1; }
+
+/* The panel itself */
+.modal-panel {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  opacity: 0;
+  transform: scale(0.97) translateY(12px);
+  transition: opacity 0.45s 0.08s var(--ease), transform 0.45s 0.08s var(--ease);
+}
+.modal-wrap.open .modal-panel { opacity: 1; transform: scale(1) translateY(0); }
+
+/* Photo side */
+.modal-photo {
+  position: relative; overflow: hidden;
+}
+.modal-photo img {
+  width: 100%; height: 100%; object-fit: cover;
+  filter: brightness(0.82) saturate(0.82);
+  transform: scale(1.06);
+  transition: transform 0.85s var(--ease);
+}
+.modal-wrap.open .modal-photo img { transform: scale(1); }
+
+/* Horizontal fade toward content side */
+.modal-photo::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(to right, transparent 50%, rgba(0,0,0,0.65) 100%);
+}
+
+/* Category + location overlaid on photo */
+.modal-photo-info {
+  position: absolute; bottom: 32px; left: 32px; z-index: 2;
+}
+.m-chip {
+  display: inline-block;
+  font-size: 0.58rem; font-weight: 500;
+  letter-spacing: 0.38em; text-transform: uppercase;
+  color: var(--white);
+  background: rgba(0,0,0,0.55);
+  border: 1px solid rgba(255,255,255,0.14);
+  border-radius: 999px;
+  padding: 5px 13px; margin-bottom: 10px;
+  backdrop-filter: blur(10px);
+}
+.m-loc  { font-size: 0.65rem; letter-spacing: 0.32em; text-transform: uppercase; color: var(--gold); margin-bottom: 3px; }
+.m-season { font-size: 0.78rem; color: var(--muted); font-style: italic; }
+
+/* Content side */
+.modal-content {
+  position: relative;
+  height: 100%;
+  overflow-y: auto; overflow-x: hidden;
+  padding: 72px 60px 56px;
+  display: flex; flex-direction: column; gap: 22px;
+  background: rgba(4,4,8,0.6);
+  backdrop-filter: blur(20px);
+  scrollbar-width: thin;
+  scrollbar-color: rgba(201,169,110,0.35) transparent;
+  -webkit-overflow-scrolling: touch;
+}
+.modal-content::-webkit-scrollbar { width: 3px; }
+.modal-content::-webkit-scrollbar-thumb { background: rgba(201,169,110,0.35); border-radius: 2px; }
+
+/* ── CLOSE BUTTON — lives inside modal only ── */
+.modal-close {
+  position: absolute;
+  top: 22px; right: 24px;
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.1);
+  color: rgba(243,238,231,0.6);
+  font-size: 16px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  backdrop-filter: blur(12px);
+  transition: background 0.3s, border-color 0.3s, color 0.3s, transform 0.4s var(--ease);
+  flex-shrink: 0;
+  z-index: 5;
+}
+.modal-close:hover {
+  background: rgba(220,60,60,0.18);
+  border-color: rgba(220,60,60,0.45);
+  color: rgba(255,100,100,0.9);
+  transform: rotate(90deg) scale(1.08);
+}
+
+/* Staggered content reveals */
+.m-eye {
+  font-size: 0.6rem; letter-spacing: 0.48em; text-transform: uppercase;
+  color: var(--gold); margin-top: 4px;
+  opacity: 0; transform: translateY(14px);
+  transition: opacity 0.55s 0.22s var(--ease), transform 0.55s 0.22s var(--ease);
+}
+.modal-wrap.open .m-eye { opacity: 1; transform: none; }
+
+.m-title {
+  font-family: 'Playfair Display', serif;
+  font-weight: 700;
+  font-size: clamp(1.7rem, 3vw, 2.6rem);
+  line-height: 1.1; letter-spacing: -0.01em;
+  color: var(--white);
+  opacity: 0; transform: translateY(16px);
+  transition: opacity 0.55s 0.32s var(--ease), transform 0.55s 0.32s var(--ease);
+}
+.modal-wrap.open .m-title { opacity: 1; transform: none; }
+
+.m-sub {
+  font-family: 'Playfair Display', serif;
+  font-style: italic; font-size: 0.95rem;
+  color: var(--muted); line-height: 1.6;
+  opacity: 0; transform: translateY(12px);
+  transition: opacity 0.55s 0.4s var(--ease), transform 0.55s 0.4s var(--ease);
+}
+.modal-wrap.open .m-sub { opacity: 1; transform: none; }
+
+.m-rule {
+  height: 1px; width: 0;
+  background: linear-gradient(90deg, var(--gold), rgba(201,169,110,0.15), transparent);
+  transition: width 0.75s 0.48s var(--ease);
+  flex-shrink: 0;
+}
+.modal-wrap.open .m-rule { width: 100%; }
+
+.m-story {
+  font-size: 0.93rem; font-weight: 300;
+  line-height: 2.05; color: rgba(243,238,231,0.62);
+  flex: 1;
+}
+.m-story p { opacity: 0; transform: translateY(10px); transition: opacity 0.55s var(--ease), transform 0.55s var(--ease); }
+.modal-wrap.open .m-story p:nth-child(1) { opacity:1;transform:none;transition-delay:0.54s }
+.modal-wrap.open .m-story p:nth-child(2) { opacity:1;transform:none;transition-delay:0.64s }
+.modal-wrap.open .m-story p:nth-child(3) { opacity:1;transform:none;transition-delay:0.74s }
+.modal-wrap.open .m-story p:nth-child(4) { opacity:1;transform:none;transition-delay:0.84s }
+.m-story p + p { margin-top: 16px; }
+
+/* ================================================
+   ADD STORY PANEL
+================================================ */
+.add-wrap {
+  position: fixed; inset: 0; z-index: 1100;
+  pointer-events: none; visibility: hidden;
+  opacity: 0; transition: opacity 0.4s;
+}
+.add-wrap.open { pointer-events: all; visibility: visible; opacity: 1; }
+
+.add-bg {
+  position: absolute; inset: 0;
+  background: rgba(0,0,0,0.9);
+  backdrop-filter: blur(24px);
+}
+
+.add-panel {
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%, -47%) scale(0.95);
+  width: min(92vw, 520px);
+  max-height: 88vh;
+  background: rgba(12,12,18,0.92);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 20px;
+  display: flex; flex-direction: column;
+  overflow: hidden;
+  backdrop-filter: blur(28px);
+  box-shadow: 0 32px 80px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.06);
+  transition: transform 0.44s var(--ease);
+}
+.add-wrap.open .add-panel { transform: translate(-50%,-50%) scale(1); }
+
+.add-scroll {
+  overflow-y: auto; padding: 48px 40px 40px;
+  display: flex; flex-direction: column; gap: 18px;
+  scrollbar-width: thin; scrollbar-color: rgba(201,169,110,0.28) transparent;
+}
+.add-scroll::-webkit-scrollbar { width: 2px; }
+.add-scroll::-webkit-scrollbar-thumb { background: rgba(201,169,110,0.3); border-radius: 2px; }
+
+/* Close button inside add panel */
+.add-close {
+  position: absolute; top: 16px; right: 18px;
+  width: 36px; height: 36px; border-radius: 50%;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.09);
+  color: rgba(243,238,231,0.5); font-size: 15px;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.3s, border-color 0.3s, color 0.3s, transform 0.4s var(--ease);
+}
+.add-close:hover {
+  background: rgba(220,60,60,0.15); border-color: rgba(220,60,60,0.4);
+  color: rgba(255,90,90,0.9); transform: rotate(90deg);
+}
+
+.add-eyebrow {
+  font-size: 0.6rem; letter-spacing: 0.45em; text-transform: uppercase; color: var(--gold);
+}
+.add-heading {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.7rem; font-weight: 700; color: var(--white); line-height: 1.15;
+}
+.add-heading em { font-style: italic; color: var(--gold); }
+
+.add-rule { height: 1px; background: linear-gradient(90deg, var(--gold), transparent); width: 36%; }
+
+.f-block { display: flex; flex-direction: column; gap: 7px; }
+.f-label {
+  font-size: 0.59rem; font-weight: 500;
+  letter-spacing: 0.4em; text-transform: uppercase;
+  color: rgba(201,169,110,0.65);
+}
+.f-in, .f-ta {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-bottom-color: rgba(255,255,255,0.14);
+  border-radius: 10px;
+  color: var(--white); padding: 11px 15px;
+  font-size: 0.86rem; font-family: 'Outfit', sans-serif; font-weight: 300;
+  outline: none;
+  transition: border-color 0.3s, background 0.3s;
+}
+.f-in:focus, .f-ta:focus {
+  border-color: rgba(201,169,110,0.45);
+  background: rgba(255,255,255,0.06);
+}
+.f-ta { resize: vertical; min-height: 100px; }
+.f-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+.submit-btn {
+  padding: 14px 20px; border: none; border-radius: 12px;
+  background: linear-gradient(135deg, var(--gold) 0%, #9b6a2a 100%);
+  color: #000; font-family: 'Outfit', sans-serif;
+  font-weight: 500; font-size: 0.7rem;
+  letter-spacing: 0.3em; text-transform: uppercase;
+  cursor: pointer; margin-top: 4px;
+  transition: opacity 0.25s, transform 0.2s;
+}
+.submit-btn:hover { opacity: 0.87; transform: translateY(-1px); }
+
+/* ================================================
+   KEYFRAMES
+================================================ */
+@keyframes fadeDown {
+  from { opacity: 0; transform: translateY(-14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(22px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+/* ================================================
+   RESPONSIVE — perfect down to 320px
+================================================ */
+
+/* Tablet: 768–1099px */
+@media (max-width: 1099px) {
+  /* Re-flow grid: hero spans full width, rest 6-col pairs */
+  .card[data-slot="0"] { grid-column: span 12; }
+  .card[data-slot="0"] .card-photo { height: 440px; }
+  .card[data-slot="0"] .card-title { font-size: 1.6rem; }
+
+  .card[data-slot="1"],
+  .card[data-slot="2"],
+  .card[data-slot="3"] { grid-column: span 6; }
+  .card[data-slot="1"] .card-photo,
+  .card[data-slot="2"] .card-photo,
+  .card[data-slot="3"] .card-photo { height: 320px; }
+  .card[data-slot="1"] .card-title,
+  .card[data-slot="2"] .card-title,
+  .card[data-slot="3"] .card-title { font-size: 1.1rem; }
+
+  .card[data-slot="4"] { grid-column: span 12; }
+  .card[data-slot="4"] .card-photo { height: 300px; }
+
+  .card[data-slot="5"],
+  .card[data-slot="6"] { grid-column: span 6; }
+
+  /* Modal: portrait stack */
+  .modal-panel { grid-template-columns: 1fr; }
+  .modal-photo { height: 42vh; min-height: 240px; }
+  .modal-content { padding: 52px 36px 40px; }
+  .m-title { font-size: 1.65rem; }
+}
+
+/* Large phone: 576–767px */
+@media (max-width: 767px) {
+  /* Nav: hide text links, keep + button */
+  .hdr-top { padding: 22px 22px; }
+  .nav-link { display: none; }
+  .hdr-right { gap: 0; }
+  .btn-add { padding: 8px 16px; font-size: 0.62rem; letter-spacing: 0.18em; }
+
+  .header-hero { padding: 0 22px 48px; }
+  .hero-scroll-hint { right: 22px; bottom: 32px; }
+  .hero-sub { font-size: 0.85rem; }
+
+  .filter-inner { padding: 0 16px; }
+  .ftab { padding: 0 13px; font-size: 0.6rem; letter-spacing: 0.22em; }
+  .filter-count { display: none; }  /* saves space on small screens */
+
+  .main { padding: 32px 16px 72px; }
+  .grid { gap: 14px; }
+
+  /* All cards become full-width single column */
+  .card[data-slot] { grid-column: span 12 !important; }
+  .card[data-slot] .card-photo { height: 280px !important; }
+  .card[data-slot] .card-title { font-size: 1.15rem !important; }
+
+  .quote-section { flex-direction: column; gap: 16px; padding: 0 22px 60px; }
+  .q-line { width: 80%; height: 1px; }
+  .q-text { font-size: 0.9rem; }
+
+  .site-footer { padding: 20px 22px; }
+
+  /* Modal full-screen on mobile */
+  .modal-panel { grid-template-columns: 1fr; }
+  .modal-photo { height: 38vh; min-height: 200px; }
+  .modal-content { padding: 48px 22px 32px; gap: 16px; }
+  .m-title { font-size: 1.4rem; }
+  .m-story { font-size: 0.88rem; line-height: 1.9; }
+
+  /* Add panel */
+  .add-panel { border-radius: 16px; }
+  .add-scroll { padding: 44px 24px 32px; gap: 14px; }
+  .f-row { grid-template-columns: 1fr; }
+}
+
+/* Small phone: 375–575px */
+@media (max-width: 575px) {
+  .logo { font-size: 1rem; }
+  .hero-title { line-height: 0.95; }
+  .card-photo img { border-radius: 0; }
+  .card-photo { border-radius: 18px 18px 0 0; }
+  .modal-photo { height: 32vh; }
+  .modal-content { padding: 44px 18px 28px; }
+}
+
+/* Very small: under 375px */
+@media (max-width: 374px) {
+  .ftab { padding: 0 9px; font-size: 0.56rem; }
+  .hero-title { font-size: 2.6rem; }
+  .add-scroll { padding: 40px 18px 28px; }
+}
+
+</style>
+</head>
+<body>
+
+<!-- ════════ HERO ════════ -->
+<header class="site-header">
+  <div class="hdr-bg"></div>
+  <div class="hdr-fade"></div>
+
+  <div class="hdr-top">
+    <div class="logo">Captured <em>Stories</em></div>
+    <div class="hdr-right">
+      <a href="#" class="nav-link">Journal</a>
+      <a href="#" class="nav-link">Archive</a>
+      <a href="#" class="nav-link">About</a>
+      <button class="btn-add" id="openAdd">＋ New Story</button>
+    </div>
+  </div>
+
+  <div class="hdr-hero">
+    <p class="hero-eyebrow">A Visual Journal · Vol. I</p>
+    <h1 class="hero-title">Every Frame<br>Holds a <em>Secret</em></h1>
+    <p class="hero-sub">Moments captured through a lens. Each photograph hides a story waiting to be told.</p>
+  </div>
+
+  <div class="hero-scroll-hint">
+    <div class="scroll-bar"></div>
+    <span>Scroll</span>
+  </div>
+</header>
+
+<!-- ════════ FILTER BAR ════════ -->
+<div class="filter-bar">
+  <div class="filter-inner">
+    <ul class="filter-tabs" id="filterTabs">
+      <li class="ftab on"  data-f="all">All</li>
+      <li class="ftab"     data-f="Nature">Nature</li>
+      <li class="ftab"     data-f="City">City</li>
+      <li class="ftab"     data-f="People">People</li>
+      <li class="ftab"     data-f="Memory">Memory</li>
+    </ul>
+    <div class="filter-count"><b id="countNum">6</b> stories</div>
+  </div>
+</div>
+
+<!-- ════════ GRID ════════ -->
+<main class="main">
+  <div class="grid" id="grid"></div>
+</main>
+
+<!-- ════════ QUOTE ════════ -->
+<div class="quote-section">
+  <div class="q-line"></div>
+  <p class="q-text">"Some pictures are not taken to show the world, but to remember how it felt."</p>
+  <div class="q-line"></div>
+</div>
+
+<!-- ════════ FOOTER ════════ -->
+<footer class="site-footer">
+  <span class="footer-brand">Captured Stories</span>
+  <span class="footer-copy">© 2025 · All rights reserved</span>
+</footer>
+
+<!-- ════════ VIEW MODAL ════════ -->
+<div class="modal-wrap" id="modalWrap">
+  <div class="modal-bg" id="modalBg"></div>
+  <div class="modal-panel">
+
+    <!-- Left: full-bleed photo -->
+    <div class="modal-photo">
+      <img id="mImg" src="" alt=""/>
+      <div class="modal-photo-info">
+        <span class="m-chip" id="mChip"></span>
+        <div class="m-loc"    id="mLoc"></div>
+        <div class="m-season" id="mSeason"></div>
+      </div>
+    </div>
+
+    <!-- Right: scrollable content — close button lives HERE -->
+    <div class="modal-content" id="mScroll">
+      <button class="modal-close" id="modalClose" aria-label="Close story">✕</button>
+      <p  class="m-eye"   id="mEye"></p>
+      <h2 class="m-title" id="mTitle"></h2>
+      <p  class="m-sub"   id="mSub"></p>
+      <div class="m-rule"></div>
+      <div class="m-story" id="mStory"></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ════════ ADD STORY ════════ -->
+<div class="add-wrap" id="addWrap">
+  <div class="add-bg"></div>
+  <div class="add-panel">
+    <button class="add-close" id="closeAdd" aria-label="Close">✕</button>
+    <div class="add-scroll">
+      <p class="add-eyebrow">New Entry</p>
+      <h2 class="add-heading">Add your <em>Story</em></h2>
+      <div class="add-rule"></div>
+
+      <div class="f-block">
+        <label class="f-label">Photo URL</label>
+        <input class="f-in" id="nImg" type="url" placeholder="https://images.unsplash.com/…"/>
+      </div>
+      <div class="f-block">
+        <label class="f-label">Title</label>
+        <input class="f-in" id="nTitle" placeholder="Name this moment"/>
+      </div>
+      <div class="f-block">
+        <label class="f-label">Subtitle</label>
+        <input class="f-in" id="nSub" placeholder="One line that captures the feeling"/>
+      </div>
+      <div class="f-block">
+        <label class="f-label">Your Story</label>
+        <textarea class="f-ta" id="nStory" placeholder="Write it freely…"></textarea>
+      </div>
+      <div class="f-row">
+        <div class="f-block">
+          <label class="f-label">Category</label>
+          <input class="f-in" id="nCat" placeholder="Nature, City…"/>
+        </div>
+        <div class="f-block">
+          <label class="f-label">Location</label>
+          <input class="f-in" id="nLoc" placeholder="Where it happened"/>
+        </div>
+      </div>
+      <div class="f-block">
+        <label class="f-label">Season</label>
+        <input class="f-in" id="nSeason" placeholder="e.g. Early Autumn"/>
+      </div>
+      <button class="submit-btn" id="doSubmit">Publish Story →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════════ JAVASCRIPT ════════ -->
+<script>
+
+/* ── DATA ──────────────────────────────── */
+const DATA = [
+  {
+    id:1, cat:'Nature', eye:'001',
+    title:'Lost Inside the Clouds',
+    sub:'At the mountain peak, a silence where sky and earth forget their boundary',
+    loc:'Himalayas, 4200m', season:'Early Autumn',
+    img:'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1400&q=90',
+    story:`<p>I woke at five in the morning. Cup of tea in hand, I pushed the door open and found the entire valley wrapped in a quilt of cloud. As though the world had fallen asleep and hadn't yet stirred.</p>
+<p>I grabbed my camera and climbed the stone steps. Dew underfoot, pine on the wind. I reached out and touched the mist — cold, damp, and strangely soft. Time felt suspended.</p>
+<p>I pressed the shutter. Click. That sound felt absurdly loud in the mountain silence — as if I had captured a moment forever without asking its permission.</p>
+<p>Later, reviewing the frames, I noticed what the naked eye had missed: the clouds carried a faint violet tinge at their edges. The mountain offered me more than I deserved.</p>`
+  },
+  {
+    id:2, cat:'City', eye:'002',
+    title:'The City Speaks at Night',
+    sub:'Rain-slicked streets under neon — every reflection a life of its own',
+    loc:'Prague, Czech Republic', season:'Late November',
+    img:'https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=1200&q=90',
+    story:`<p>After rain the city transforms. Cobblestones shine, traffic signals stretch long and liquid into the puddles below. I walked out without an umbrella on purpose.</p>
+<p>Near an old tram stop I paused. A figure crossed — red umbrella, yellow raincoat. I watched them double in the water: one real, one upside-down. Two lives sharing one pavement.</p>
+<p>I framed it. The city's loneliness and its aliveness, locked inside a single rectangle of light and shadow.</p>`
+  },
+  {
+    id:3, cat:'People', eye:'003',
+    title:"The Elder's Hands",
+    sub:'Ninety years of living written in every crease and fold',
+    loc:'Sylhet, Bangladesh', season:'Winter',
+    img:'https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?w=1200&q=90',
+    story:`<p>I met her at the village market, sitting in a corner, a clutch of rice stalks in her lap. Her eyes looked somewhere far away — perhaps into another decade.</p>
+<p>I asked if I could photograph her. She smiled. "What would you want with a picture of an old woman like me?" "A great deal," I told her.</p>
+<p>I turned the lens toward her hands. Hands that had planted rice, raised children, wiped tears, and pressed together in prayer thousands of times. Every line was a chapter. The photograph wrote itself.</p>`
+  },
+  {
+    id:4, cat:'Nature', eye:'004',
+    title:'The Last Colour of Dusk',
+    sub:'The moment that always leaves — yet we always stay for it',
+    loc:'Padma River, Bangladesh', season:'Late Monsoon',
+    img:'https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=1200&q=90',
+    story:`<p>I went to the riverbank late afternoon, knowing the sun would set, not knowing how it would go about doing so.</p>
+<p>First orange. Then pink. Then a colour arrived with no name in any language I know. Sky and river merged into it — one seamless, nameless thing.</p>
+<p>I held the shutter open. Minutes later it was all gone. But locked in the frame: that unnamed instant, permanent now forever.</p>`
+  },
+  {
+    id:5, cat:'Memory', eye:'005',
+    title:'The Empty Chair',
+    sub:'Absence is a presence too — silence is a kind of speech',
+    loc:'Dhaka, Bangladesh', season:'Spring',
+    img:'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=1200&q=90',
+    story:`<p>I visited my grandfather's room for the first time in months. Everything exactly as it was. Only that chair sat empty by the window.</p>
+<p>Afternoon light fell across its worn armrests at precisely the angle he used to sit in. Dust motes floated in the beam. The room breathed around his absence.</p>
+<p>I sat for a long time. Then raised the camera — because this emptiness was also a truth, and truths deserve to be kept.</p>`
+  },
+  {
+    id:6, cat:'City', eye:'006',
+    title:'The First Rain',
+    sub:"Petrichor, wet hair, a child's laughter — this is what monsoon means",
+    loc:'Chittagong, Bangladesh', season:'Monsoon',
+    img:'https://images.unsplash.com/photo-1534274988757-a28bf1a57c17?w=1200&q=90',
+    story:`<p>For weeks the sun had ruled absolutely. The earth cracked. Then one afternoon the sky turned pewter and the neighbourhood children burst into the courtyard.</p>
+<p>They danced in it. They tilted their faces up. They laughed for no reason except that it was raining — that kind of joy, uncaused and unprovoked, is rare to witness.</p>
+<p>I photographed them from the balcony. They never noticed. That's always when you get the truest pictures.</p>`
+  }
+];
+
+/* ── STATE ─────────────────────────────── */
+let stories  = [...DATA];
+let activeF  = 'all';
+let counter  = DATA.length;
+
+/* ── INTERSECTION OBSERVER ─────────────── */
+const io = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+      io.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.07 });
+
+/* ── SLOT ASSIGNMENT ───────────────────── */
+// Pattern: 0,1 | 2,3,4 | 5,6 | then 7,8,9…
+function getSlot(i) {
+  const pattern = [0,1,2,3,4,5,6];
+  return i < pattern.length ? pattern[i] : 7 + (i % 3);
+}
+
+/* ── BUILD CARD ────────────────────────── */
+function buildCard(s, i) {
+  const slot  = getSlot(i);
+  const delay = (i % 4) * 0.09;
+
+  const card = document.createElement('article');
+  card.className = 'card';
+  card.tabIndex  = 0;
+  card.setAttribute('data-slot', slot);
+  card.setAttribute('role', 'button');
+  card.setAttribute('aria-label', 'Read story: ' + s.title);
+  card.style.animationDelay = delay + 's';
+  card.dataset.cat = s.cat;
+
+  card.innerHTML =
+    '<div class="card-photo">' +
+      '<img src="' + s.img + '" alt="' + s.title + '" loading="lazy"/>' +
+      '<div class="card-overlay"></div>' +
+      '<div class="card-line"></div>' +
+      '<span class="card-chip">' + s.cat + '</span>' +
+      '<span class="card-index">' + s.eye + '</span>' +
+      '<div class="card-text">' +
+        '<div class="card-loc">' + s.loc + '</div>' +
+        '<h2 class="card-title">' + s.title + '</h2>' +
+        '<p class="card-sub">' + s.sub + '</p>' +
+        '<div class="card-action">' +
+          '<span class="card-cta">Read Story</span>' +
+          '<span class="card-arrow">→</span>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
+
+  card.addEventListener('click', () => openModal(s));
+  card.addEventListener('keydown', e => {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openModal(s); }
+  });
+
+  return card;
+}
+
+/* ── RENDER ────────────────────────────── */
+const grid = document.getElementById('grid');
+
+function render(filter) {
+  grid.innerHTML = '';
+  const list = filter === 'all' ? stories : stories.filter(s => s.cat === filter);
+  document.getElementById('countNum').textContent = list.length;
+
+  if (!list.length) {
+    const msg = document.createElement('p');
+    msg.style.cssText = 'grid-column:span 12;text-align:center;padding:80px 0;color:rgba(243,238,231,0.25);font-style:italic';
+    msg.textContent = 'No stories in this category yet.';
+    grid.appendChild(msg);
+    return;
+  }
+
+  list.forEach((s, i) => {
+    const card = buildCard(s, i);
+    grid.appendChild(card);
+    // Small delay before observing so layout is settled
+    requestAnimationFrame(() => io.observe(card));
+  });
+}
+
+render('all');
+
+/* ── FILTER TABS ───────────────────────── */
+document.getElementById('filterTabs').addEventListener('click', e => {
+  const tab = e.target.closest('.ftab');
+  if (!tab) return;
+  document.querySelectorAll('.ftab').forEach(t => t.classList.remove('on'));
+  tab.classList.add('on');
+  activeF = tab.dataset.f;
+  render(activeF);
+});
+
+/* ── MODAL ─────────────────────────────── */
+const modalWrap  = document.getElementById('modalWrap');
+const modalClose = document.getElementById('modalClose');
+const modalBg    = document.getElementById('modalBg');
+
+function openModal(s) {
+  document.getElementById('mImg').src          = s.img;
+  document.getElementById('mImg').alt          = s.title;
+  document.getElementById('mChip').textContent = s.cat;
+  document.getElementById('mLoc').textContent  = s.loc;
+  document.getElementById('mSeason').textContent = s.season || '';
+  document.getElementById('mEye').textContent  = 'Story \u2116 ' + s.eye;
+  document.getElementById('mTitle').textContent = s.title;
+  document.getElementById('mSub').textContent  = s.sub;
+  document.getElementById('mStory').innerHTML  = s.story;
+  document.getElementById('mScroll').scrollTop = 0;
+
+  modalWrap.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+  modalWrap.classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+modalClose.addEventListener('click', closeModal);
+modalBg.addEventListener('click', closeModal);
+
+/* ── ADD STORY ─────────────────────────── */
+const addWrap  = document.getElementById('addWrap');
+const closeAdd = document.getElementById('closeAdd');
+
+function openAdd()  { addWrap.classList.add('open');    document.body.style.overflow = 'hidden'; }
+function closeAdd_() { addWrap.classList.remove('open'); document.body.style.overflow = ''; }
+
+document.getElementById('openAdd').addEventListener('click', openAdd);
+closeAdd.addEventListener('click', closeAdd_);
+addWrap.querySelector('.add-bg').addEventListener('click', closeAdd_);
+
+document.getElementById('doSubmit').addEventListener('click', () => {
+  const img    = document.getElementById('nImg').value.trim();
+  const title  = document.getElementById('nTitle').value.trim();
+  const sub    = document.getElementById('nSub').value.trim();
+  const stTxt  = document.getElementById('nStory').value.trim();
+  const cat    = document.getElementById('nCat').value.trim()    || 'Uncategorised';
+  const loc    = document.getElementById('nLoc').value.trim()    || 'Unknown';
+  const season = document.getElementById('nSeason').value.trim() || '';
+
+  if (!title) { alert('Please add a title.'); return; }
+
+  counter++;
+  const ns = {
+    id: counter,
+    cat, eye: String(counter).padStart(3,'0'),
+    title, sub: sub || '',
+    loc, season,
+    img: img || 'https://images.unsplash.com/photo-1518837695005-2083093ee35b?w=1200&q=90',
+    story: stTxt
+      ? '<p>' + stTxt.replace(/\n\n+/g, '</p><p>').replace(/\n/g, ' ') + '</p>'
+      : '<p>No story written yet.</p>'
+  };
+
+  stories.push(ns);
+  closeAdd_();
+  ['nImg','nTitle','nSub','nStory','nCat','nLoc','nSeason'].forEach(id => {
+    document.getElementById(id).value = '';
+  });
+
+  // Back to All filter and scroll to new card
+  activeF = 'all';
+  document.querySelectorAll('.ftab').forEach(t => t.classList.toggle('on', t.dataset.f === 'all'));
+  render('all');
+  setTimeout(() => {
+    const last = grid.lastElementChild;
+    if (last) last.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }, 420);
+});
+
+/* ── KEYBOARD ──────────────────────────── */
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') { closeModal(); closeAdd_(); }
+});
+
+</script>
+</body>
+</html>
