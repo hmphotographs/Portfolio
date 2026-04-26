@@ -19,24 +19,70 @@ function toHtml(txt){ return '<p>'+txt.replace(/\n\n+/g,'</p><p>').replace(/\n/g
 function toText(html){ return html.replace(/<\/p><p>/g,'\n\n').replace(/<\/?p>/g,''); }
 
 /* ── JSONBin ── */
-async function loadFromBin(){
-  setLoading(true,'Loading stories...');
-  try{
-    const r=await fetch(BIN_URL+'/latest',{headers:{'X-Master-Key':API_KEY}});
-    if(!r.ok) throw new Error('HTTP '+r.status);
-    const json=await r.json();
-    if(Array.isArray(json.record)&&json.record.length>0){
-      stories=json.record; render(activeF);
+
+async function loadFromBin() {
+  const grid = G('grid');
+
+  /* Step 1: count বের করো cache থেকে অথবা default */
+  let count = 6;
+  const cached = localStorage.getItem('stories_cache');
+  if (cached) {
+    try { count = JSON.parse(cached).length; } catch(e) {}
+  }
+
+  /* Step 2: Real card structure render করো — sk-loading class দিয়ে */
+  const fakeStories = Array.from({ length: count }, (_, i) => ({
+    id: i+1, cat: '', eye: String(i+1).padStart(3,'0'),
+    title: '', sub: '', loc: '', season: '',
+    img: '', story: ''
+  }));
+
+  grid.innerHTML = '';
+  fakeStories.forEach((s, i) => {
+    const card = buildCard(s, i);
+    card.classList.add('sk-loading');
+    grid.appendChild(card);
+    requestAnimationFrame(() => io.observe(card));
+  });
+  G('countNum').textContent = count;
+
+  /* Step 3: Cache থেকে instantly দেখাও */
+   if (cached) {
+    try {
+      stories = JSON.parse(cached);
+      renderReal();
+    } catch(e) {}
+  } 
+
+  /* Step 4: Fresh data fetch করো */
+  try {
+    const r = await fetch(BIN_URL, { headers: { 'X-Master-Key': API_KEY } });
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    const json = await r.json();
+    if (Array.isArray(json.record) && json.record.length > 0) {
+      stories = json.record;
+      localStorage.setItem('stories_cache', JSON.stringify(stories));
+      renderReal();
     } else {
       await saveToBin(getDefaults());
     }
-  }catch(err){
+  } catch(err) {
     console.error(err);
-    G('grid').innerHTML='<p style="grid-column:span 12;text-align:center;padding:80px 0;color:rgba(243,238,231,0.3);font-style:italic">Could not connect.<br><button onclick="loadFromBin()" style="margin-top:16px;padding:10px 24px;background:rgba(201,169,110,0.15);border:1px solid rgba(201,169,110,0.35);color:#C9A96E;border-radius:999px;cursor:pointer;font-size:0.7rem;letter-spacing:0.3em">Retry</button></p>';
-    G('countNum').textContent='0';
+    if (!stories.length) {
+      grid.innerHTML = '<p style="grid-column:span 12;text-align:center;padding:80px 0;color:rgba(243,238,231,0.3);font-style:italic">Could not connect.<br><button onclick="loadFromBin()" style="margin-top:16px;padding:10px 24px;background:rgba(201,169,110,0.15);border:1px solid rgba(201,169,110,0.35);color:#C9A96E;border-radius:999px;cursor:pointer;font-size:0.7rem;letter-spacing:0.3em">Retry</button></p>';
+      G('countNum').textContent = '0';
+    }
   }
   setLoading(false);
 }
+
+/* Real data এসে গেলে sk-loading সরিয়ে real cards দেখাও */
+function renderReal() {
+  render(activeF);
+}
+
+
+
 async function saveToBin(data){
   const r=await fetch(BIN_URL,{method:'PUT',headers:{'Content-Type':'application/json','X-Master-Key':API_KEY},body:JSON.stringify(data)});
   if(!r.ok) throw new Error('Save failed: '+r.status);
