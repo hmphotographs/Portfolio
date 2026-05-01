@@ -2,13 +2,14 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<!--   <meta name="viewport" content="width=device-width, initial-scale=1.0" /> -->
   <title>Contact — Hussain Mahmud Photography</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
 
 <!-- <div class="grain-overlay" aria-hidden="true"></div> -->
+<canvas id="particleCanvas"></canvas>
 <div class="cursor-dot"></div>
 <div class="cursor-ring"></div>
 <div class="scroll-progress"></div>
@@ -16,7 +17,7 @@
 <header id="navbar">
   <div class="container navbar-inner">
     <a href="index.html" class="logo">
-      <div class="logo-img-wrap"><img src="logo_1776338153641.png" alt="Hussain Mahmud Photography" class="logo-img" /></div>
+      <div class="logo-img-wrap"><img src="assets/logo_1776338153641.png" alt="Hussain Mahmud Photography" class="logo-img" /></div>
       <div class="logo-text"><span class="logo-name">Hussain</span><span class="logo-sub">Photography</span></div>
     </a>
     <nav class="desktop-nav">
@@ -46,25 +47,26 @@
   <a href="contact.html"
 class="mobile-nav-link active">Contact</a>
   <a href="stories.html"   class="mobile-nav-link">Stories</a>
-  <a href="contact.html"   class="mobile-nav-btn">Get In Touch</a>
+  <a href="contact.html"   class="mobile-nav-btn text-grad-vivid">Get In Touch</a>
 </div>
 
+<!-- hero -->
+
 <main class="contact-page">
-  <svg class="contact-svg" viewBox="0 0 1440 900">
-    <circle cx="200" cy="200" r="300" fill="none" stroke="white" stroke-width="1"/>
-    <circle cx="200" cy="200" r="200" fill="none" stroke="white" stroke-width="0.5"/>
-    <circle cx="1240" cy="700" r="250" fill="none" stroke="white" stroke-width="1"/>
-    <line x1="0" y1="450" x2="1440" y2="450" stroke="white" stroke-width="0.5" stroke-dasharray="8 16"/>
-  </svg>
+ <svg class="contact-svg" viewBox="0 0 1440 900">
+  <circle class="svg-c1" cx="200" cy="200" r="300" fill="none" stroke="white" stroke-width="1"/>
+  <circle class="svg-c2" cx="200" cy="200" r="200" fill="none" stroke="white" stroke-width="0.5"/>
+  <circle class="svg-c3" cx="1240" cy="700" r="250" fill="none" stroke="white" stroke-width="1"/>
+  <line x1="0" y1="450" x2="1440" y2="450" stroke="white" stroke-width="0.5" stroke-dasharray="8 16"/>
+</svg>
 
   <div class="container" style="position:relative;z-index:10">
-    <!-- Header -->
     <div class="contact-header reveal">
       <span class="section-label label-indigo" style="margin-bottom:16px">Get in touch</span>
       <h1 class="contact-title">
-        Let's <span class="text-grad-accent" style="font-style:italic;font-weight:300">Connect</span>
+        Let's <span class="text-grad-accent" style="font-style:italic;font-weight:300" id="suff-text-cont">Connect</span>
       </h1>
-      <p class="contact-subtitle">Whether it's a commission, a print inquiry, or just to say hello — I'd love to hear from you.</p>
+      <p class="contact-subtitle" style="font-size:15px">Whether it's a commission, a print inquiry, or just to say hello — I'd love to hear from you.</p>
     </div>
 
     <div class="contact-grid">
@@ -79,6 +81,13 @@ class="mobile-nav-link active">Contact</a>
             <div class="info-card-label">Email</div>
             <div class="info-card-value">jnm309249@gmail.com</div>
             <div class="info-card-sub">For all inquiries &amp; bookings</div>
+            <div class="response-badge">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px">
+                    <circle cx="12" cy="12" r="10"/>
+                    <polyline points="12 6 12 12 16 14"/>
+                </svg>
+  Responds within 24h
+</div>
           </div>
         </a>
 
@@ -127,28 +136,30 @@ class="mobile-nav-link active">Contact</a>
       <!-- Form column -->
       <div class="reveal reveal-delay-1">
         <div class="form-card">
-          <h2 class="form-title">Send a message</h2>
+          <h2 class="form-title blur-text">Send a message</h2>
           <form id="contactForm" novalidate>
             <div class="form-row">
-              <div class="form-field">
-                <label class="form-label" for="name">Your Name</label>
+              <div class="form-field floating-field">
                 <input class="form-input" id="name" type="text" placeholder="Enter your name" autocomplete="name" />
+                <label class="floating-label" for="name">Your Name</label>
                 <span class="form-error" id="nameErr">Name is required (min 2 characters)</span>
               </div>
-              <div class="form-field">
-                <label class="form-label" for="email">Your Email</label>
+              <div class="form-field floating-field">
                 <input class="form-input" id="email" type="email" placeholder="your@email.com" autocomplete="email" />
+                <label class="floating-label" for="email">Your Email</label>
                 <span class="form-error" id="emailErr">Please enter a valid email address</span>
               </div>
             </div>
-            <div class="form-field form-field-full">
-              <label class="form-label" for="subject">Subject</label>
+            <div class="form-field floating-field form-field-full">
               <input class="form-input" id="subject" type="text" placeholder="What's this about?" />
+              <label class="floating-label" for="subject">Subject</label>
               <span class="form-error" id="subjectErr">Subject is required (min 5 characters)</span>
             </div>
-            <div class="form-field form-field-full">
-              <label class="form-label" for="message">Message</label>
+            <div class="form-field floating-field form-field-full">
+              <label class="form-label" for="message">Message</label>                                
               <textarea class="form-textarea" id="message" rows="6" placeholder="Tell me about your project or just say hello..."></textarea>
+              
+              <div class="char-counter" id="charCounter">0 / 500</div>
               <span class="form-error" id="msgErr">Message is too short (min 10 characters)</span>
             </div>
             <button type="submit" class="form-submit">
@@ -158,27 +169,183 @@ class="mobile-nav-link active">Contact</a>
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
               </div>
             </button>
-            <p class="form-note">Message will open in your email app, pre-filled and ready to send to Hussain.</p>
+            <p class="form-note blur-text">Message will open in your email app, pre-filled and ready to send to Hussain.</p>
           </form>
         </div>
       </div>
     </div>
   </div>
+  
+  <!-- pricing Section -->
+  
+  <section class="pricing-section">
+  <div class="container">
+    <div class="section-eyebrow reveal">
+      <span class="section-label label-indigo">Investment</span>
+      <h2 style="font-size:clamp(2rem,4vw,3rem);font-weight:300;letter-spacing:-0.02em;color:#fff;margin:8px 0 0">
+        Simple, <em style="font-style:italic;" class="text-grad-vivid">transparent</em> pricing
+      </h2>
+    </div>
+    <div class="pricing-grid">
+
+      <!-- Essential -->
+      <div class="pricing-card low reveal">
+        <div class="pricing-name">Essential</div>
+        <div class="pricing-price"><sup>৳</sup>3,500<span>/session</span></div>
+        <div class="pricing-desc blur-text">Perfect for portraits, events, or small shoots.</div>
+        <div class="pricing-divider"></div>
+        <ul class="pricing-features">
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="2.5" style="width:14px;height:14px;flex-shrink:0"><polyline points="20 6 9 17 4 12"/></svg> 2-hour shoot</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="2.5" style="width:14px;height:14px;flex-shrink:0"><polyline points="20 6 9 17 4 12"/></svg> 30 edited photos</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="2.5" style="width:14px;height:14px;flex-shrink:0"><polyline points="20 6 9 17 4 12"/></svg> Online delivery gallery</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="2" style="width:14px;height:14px;flex-shrink:0"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg> <span style="opacity:.35">Prints not included</span></li>
+        </ul>
+        <a href="mailto:jnm309249@gmail.com?subject=[Portfolio] Essential Package" class="pricing-cta">Book Essential</a>
+      </div>
+
+      <!-- Professional (Featured) -->
+      <div class="pricing-card featured reveal">
+        <div class="pricing-badge">Most Popular</div>
+        <div class="pricing-name">Professional</div>
+        <div class="pricing-price"><sup>৳</sup>8,000<span>/session</span></div>
+        <div class="pricing-desc blur-text">Ideal for brand shoots, events & storytelling projects.</div>
+        <div class="pricing-divider"></div>
+        <ul class="pricing-features">
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="#818cf8" stroke-width="2.5" style="width:14px;height:14px;flex-shrink:0"><polyline points="20 6 9 17 4 12"/></svg> Full-day shoot (up to 6h)</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="#818cf8" stroke-width="2.5" style="width:14px;height:14px;flex-shrink:0"><polyline points="20 6 9 17 4 12"/></svg> 80+ edited photos</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="#818cf8" stroke-width="2.5" style="width:14px;height:14px;flex-shrink:0"><polyline points="20 6 9 17 4 12"/></svg> Online delivery gallery</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="#818cf8" stroke-width="2.5" style="width:14px;height:14px;flex-shrink:0"><polyline points="20 6 9 17 4 12"/></svg> 2 print-ready exports</li>
+        </ul>
+        <a href="mailto:jnm309249@gmail.com?subject=[Portfolio] Professional Package" class="pricing-cta">Book Professional</a>
+      </div>
+
+      <!-- Custom -->
+      <div class="pricing-card custom reveal">
+        <div class="pricing-name">Custom</div>
+        <div class="pricing-price" style="font-size:1.8rem;padding-top:6px">Let's talk</div>
+        <div class="pricing-desc blur-text">Multi-day, editorial, commercial, or long-term collaboration.</div>
+        <div class="pricing-divider"></div>
+        <ul class="pricing-features">
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="#e355ff" stroke-width="2.5" style="width:14px;height:14px;flex-shrink:0"><polyline points="20 6 9 17 4 12"/></svg> Tailored to your project</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="#e355ff" stroke-width="2.5" style="width:14px;height:14px;flex-shrink:0"><polyline points="20 6 9 17 4 12"/></svg> Unlimited revisions</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="#e355ff" stroke-width="2.5" style="width:14px;height:14px;flex-shrink:0"><polyline points="20 6 9 17 4 12"/></svg> Commercial licensing</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="#e355ff" stroke-width="2.5" style="width:14px;height:14px;flex-shrink:0"><polyline points="20 6 9 17 4 12"/></svg> Priority response</li>
+        </ul>
+        <a href="mailto:jnm309249@gmail.com?subject=[Portfolio] Custom Project" class="pricing-cta">Start Conversation</a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- FAG section -->
+
+<section style="position:relative;z-index:10;padding:60px 0 80px">
+  <div class="container">
+    <div class="section-eyebrow reveal" style="text-align:center;max-width:760px;margin:0 auto 40px">
+      <span class="section-label label-indigo">FAQ</span>
+      <h2 style="font-size:clamp(2rem,4vw,3rem);font-weight:300;letter-spacing:-0.02em;color:#fff;margin:8px 0 0">
+        Common <em style="font-style:italic" class="text-grad-vivid">questions</em>
+      </h2>
+    </div>
+    <div style="max-width:760px;margin:0 auto">
+
+      <div class="faq-item reveal">
+        <button class="faq-question">What areas do you cover for shoots?
+          <span class="faq-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
+        </button>
+        <div class="faq-answer"><p class="blur-text">Based in Rajbari, Dhaka — open to traveling across Bangladesh for the right project. Travel fees may apply outside Dhaka division.</p></div>
+      </div>
+
+      <div class="faq-item reveal">
+        <button class="faq-question">How long until I receive my photos?
+          <span class="faq-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
+        </button>
+        <div class="faq-answer"><p class="blur-text">Typically 5–10 business days for standard packages. Rush delivery available for an additional fee. Larger projects discussed during booking.</p></div>
+      </div>
+
+      <div class="faq-item reveal">
+        <button class="faq-question">Do you do macro or wildlife commissions?
+          <span class="faq-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
+        </button>
+        <div class="faq-answer"><p class="blur-text">Absolutely — macro and nature photography are my specialities. Contact me with details and I'll let you know what's possible.</p></div>
+      </div>
+
+      <div class="faq-item reveal">
+        <button class="faq-question">Can I purchase prints of your existing work?
+          <span class="faq-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
+        </button>
+        <div class="faq-answer"><p class="blur-text">Yes! Select portfolio images are available as fine art prints. Email me the photo you want and your preferred size for pricing and shipping details.</p></div>
+      </div>
+
+      <div class="faq-item reveal">
+        <button class="faq-question">What's your cancellation policy?
+          <span class="faq-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
+        </button>
+        <div class="faq-answer"><p class="blur-text">48+ hours before shoot: fully refundable. Within 48 hours: 50% fee applies. Just communicate early and we'll find a solution.</p></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- map section -->
+
+<section style="padding:40px 0 100px;position:relative;z-index:10">
+  <div class="container">
+    <div class="section-eyebrow reveal" style="margin-bottom:32px">
+      <span class="section-label label-indigo">Find me</span>
+      <h2 style="font-size:clamp(2rem,4vw,3rem);font-weight:300;letter-spacing:-0.02em;color:#fff;margin:8px 0 0">
+        Based in <em style="font-style:italic" class="text-grad-vivid">Rajbari</em>
+      </h2>
+    </div>
+    <div class="map-card reveal">
+      <iframe
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d116894.45!2d89.57!3d23.76!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39fc5c1f0b8e0001%3A0x7d0a3c4e5f6d7e8f!2sRajbari%2C%20Bangladesh!5e0!3m2!1sen!2sbd"
+        allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
+      </iframe>
+      <div class="map-overlay">
+        <div class="map-overlay-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#06b6d4" stroke-width="2" style="width:18px;height:18px"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        </div>
+        <div>
+          <div class="map-overlay-title">Rajbari, Dhaka</div>
+          <div class="map-overlay-sub">Bangladesh · Available to travel</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+  
 </main>
 
 <footer>
   <div class="footer-rule"></div>
   <div class="footer-inner">
     <div class="footer-grid">
+      <!-- Brand -->
       <div>
         <a href="index.html" class="logo" style="margin-bottom:20px;display:inline-flex">
-          <div class="logo-img-wrap"><img src="photographer.png" alt="Logo" class="logo-img" style="width:40px;height:40px;margin-right:10px" /></div>
-          <div class="logo-text"><span class="logo-name" style="font-size:1rem">Hussain Mahmud</span><span class="logo-sub">Photography</span></div>
+          <div class="logo-img-wrap"><img src="assets/photographer.png" alt="Logo" class="logo-img" style="width:40px;height:40px;margin-right:10px" /></div>
+          <div class="logo-text">
+            <span class="logo-name" style="font-size:1rem">Hussain Mahmud</span>
+            <span class="logo-sub">Photographer</span>
+          </div>
         </a>
-        <p class="footer-brand-desc">Capturing the extraordinary within the ordinary — macro worlds, harbor silhouettes, and street life from Rajbari, Dhaka, Bangladesh.</p>
-        <div class="footer-contact-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Rajbari, Dhaka, Bangladesh</div>
-        <a href="mailto:jnm309249@gmail.com" class="footer-contact-row" style="text-decoration:none"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px"><rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="22,4 12,13 2,4"/></svg>jnm309249@gmail.com</a>
+        <p class="footer-brand-desc blur-text">Capturing the extraordinary within the ordinary — macro worlds, harbor silhouettes, and street life from Rajbari, Dhaka, Bangladesh.</p>
+        <div class="footer-contact-row">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          Rajbari, Dhaka, Bangladesh
+        </div>
+        <a href="mailto:jnm309249@gmail.com" class="footer-contact-row" style="text-decoration:none">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="22,4 12,13 2,4"/></svg>
+          jnm309249@gmail.com
+        </a>
       </div>
+      <!-- Explore -->
       <div>
         <h4 class="footer-col-title">Explore</h4>
         <a href="index.html"     class="footer-link"><span class="footer-link-line"></span>Home</a>
@@ -187,35 +354,38 @@ class="mobile-nav-link active">Contact</a>
         <a href="contact.html"   class="footer-link"><span class="footer-link-line"></span>Contact</a>
         <a href="stories.html"   class="footer-link"><span class="footer-link-line"></span>Stories</a>
       </div>
-      
+      <!-- Connect -->
       <div>
         <h4 class="footer-col-title">Connect</h4>
         <a href="https://www.facebook.com/hmphoto19graphs?mibextid=ZbWKwL" target="_blank" rel="noopener" class="footer-link"><span class="footer-link-line"></span>Facebook</a>
         <a href="https://www.instagram.com/hmphoto9" target="_blank" rel="noopener" class="footer-link"><span class="footer-link-line"></span>Instagram</a>
         <a href="https://m.me/ch/Abam3cOYRQPn8sER/" target="_blank" rel="noopener" class="footer-link"><span class="footer-link-line"></span>Messenger</a>
       </div>
-     </div>
-      
+      <!-- Thumbs -->
+      <div>
         <h4 class="footer-col-title">Recent Shots</h4>
         <div class="footer-thumbs">
-          <div class="footer-thumb"><img src="Photo4_1776338153984.jpg" alt="" /></div>
-          <div class="footer-thumb"><img src="Photo1_1776338153859.jpg" alt="" /></div>
-          <div class="footer-thumb"><img src="20260318_135147_1776340170896.jpg" alt="" /></div>
-          <div class="footer-thumb"><img src="PXL_20260321_122043556_1776340171117.jpg" alt="" /></div>
-          <div class="footer-thumb"><img src="PXL_20231025_164423266_1776340171141.jpg" alt="" /></div>
-          <div class="footer-thumb"><img src="PXL_20240105_113433807.PORTRAIT_1776340171070.jpg" alt="" /></div>
+          <div class="footer-thumb"><img src="assets/Photo4_1776338153984.jpg" alt="" /></div>
+          <div class="footer-thumb"><img src="assets/Photo1_1776338153859.jpg" alt="" /></div>
+          <div class="footer-thumb"><img src="assets/20260318_135147_1776340170896.jpg" alt="" /></div>
+          <div class="footer-thumb"><img src="assets/PXL_20260321_122043556_1776340171117.jpg" alt="" /></div>
+          <div class="footer-thumb"><img src="assets/PXL_20231025_164423266_1776340171141.jpg" alt="" /></div>
+          <div class="footer-thumb"><img src="assets/PXL_20240105_113433807.PORTRAIT_1776340171070.jpg" alt="" /></div>
         </div>
-        <a href="portfolio.html" class="footer-view-all">View all <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a>
+        <a href="portfolio.html" class="footer-view-all">
+          View all
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        </a>
       </div>
     </div>
     <div class="footer-rule-bottom"></div>
     <div class="footer-bottom">
-      <p class="footer-copyright">© <span id="year"></span> Hussain Mahmud Photography — All rights reserved</p>
+      <p class="footer-copyright blur-text">© <span id="year"></span> Hussain Mahmud Photography — All rights reserved</p>
       <p class="footer-tagline text-grad-footer">Rajbari · Dhaka · Bangladesh</p>
     </div>
   </div>
 </footer>
 
-<script src="main.js"></script>
+<script src="js/main.js"></script>
 </body>
 </html>

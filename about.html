@@ -2,9 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0" /> -->
   <title>About — Hussain Mahmud Photography</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
 
@@ -16,7 +16,7 @@
 <header id="navbar">
   <div class="container navbar-inner">
     <a href="index.html" class="logo">
-      <div class="logo-img-wrap"><img src="logo_1776338153641.png" alt="Hussain Mahmud Photography" class="logo-img" /></div>
+      <div class="logo-img-wrap"><img src="assets/logo_1776338153641.png" alt="Hussain Mahmud Photography" class="logo-img" /></div>
       <div class="logo-text"><span class="logo-name">Hussain</span><span class="logo-sub">Photography</span></div>
     </a>
     <nav class="desktop-nav">
@@ -45,13 +45,13 @@
   <a href="about.html"     class="mobile-nav-link active">About</a>
   <a href="contact.html"   class="mobile-nav-link">Contact</a>
   <a href="stories.html"   class="mobile-nav-link">Stories</a>
-  <a href="contact.html"   class="mobile-nav-btn">Get In Touch</a>
+  <a href="contact.html"   class="mobile-nav-btn text-grad-vivid">Get In Touch</a>
 </div>
 
 <!-- ═══ ABOUT HERO ═══ -->
 <section class="about-hero">
   <div class="about-hero-bg">
-    <img src="cover-1.png" alt="Harbor at golden hour" class="bg"/>
+    <img src="assets/cover-1.png" alt="Harbor at golden hour" class="bg"/>
   </div>
   <div class="about-hero-bg-left"></div>
   <div class="about-hero-content container">
@@ -71,30 +71,31 @@
           "The most extraordinary photographs happen
           <span class="text-grad-vivid" style="font-style:italic"> within walking distance</span>
           of where you live."
-        </p>
-        <p class="about-body reveal reveal-delay-1">
+        </p><br><br><br>
+        <p class="about-body reveal reveal-delay-1" style="font-size:16.5px">
           I'm a self-taught photographer from Rajbari, Dhaka, Bangladesh. My obsession is scale — getting close enough to an ant to fill the entire frame, finding the geometry inside a wildflower petal, watching golden light paint a harbor at dusk.
+        </p> <br><br><br>
+        <p class="about-body reveal reveal-delay-2" style="font-size:16.5px">
+          You don't need to travel the world. You need to truly <span class="text-grad-vivid">see your own backyard</span>. Mine happens to be one of the most beautiful places I've ever looked at — and I've looked very, very closely.
         </p>
-        <p class="about-body reveal reveal-delay-2">
-          You don't need to travel the world. You need to truly <em>see</em> your own backyard. Mine happens to be one of the most beautiful places I've ever looked at — and I've looked very, very closely.
-        </p>
+       
       </div>
       <!-- Photo collage -->
       <div class="reveal reveal-delay-2">
         <div class="about-photo-grid">
           <div>
             <div class="about-photo-card about-photo-tall">
-              <img src="Photo1_1776338153859.jpg" alt="Macro shot" style="aspect-ratio:3/4;height:100%" />
+              <img src="assets/Photo1_1776338153859.jpg" alt="Macro shot" style="aspect-ratio:3/4;height:100%" />
               <div class="about-photo-label"><span style="color:#6ee7b7">Macro</span></div>
             </div>
           </div>
           <div class="about-photo-col2">
             <div class="about-photo-card" style="flex:1">
-              <img src="PXL_20260321_122043556_1776340171117.jpg" alt="Floral shot" style="width:100%;height:100%;object-fit:cover;aspect-ratio:1" />
+              <img src="assets/PXL_20260321_122043556_1776340171117.jpg" alt="Floral shot" style="width:100%;height:100%;object-fit:cover;aspect-ratio:1" />
               <div class="about-photo-label"><span style="color:#c4b5fd">Floral</span></div>
             </div>
             <div class="about-photo-card" style="flex:1">
-              <img src="PXL_20231025_164423266_1776340171141.jpg" alt="Street shot" style="width:100%;height:100%;object-fit:cover;aspect-ratio:1" />
+              <img src="assets/PXL_20231025_164423266_1776340171141.jpg" alt="Street shot" style="width:100%;height:100%;object-fit:cover;aspect-ratio:1" />
               <div class="about-photo-label"><span style="color:#67e8f9">Street</span></div>
             </div>
           </div>
@@ -112,32 +113,32 @@
       <h2 class="section-title reveal reveal-delay-1" style="font-size:clamp(2rem,4vw,3rem);color:#fff">Specialties</h2>
     </div>
     <div class="specialties-grid">
-      <div class="specialty-card reveal">
-        <div class="specialty-icon" style="background:rgba(16,185,129,0.15);border:1px solid rgba(16,185,129,0.3)">
+      <div class="specialty-card reveal border-glow">
+        <span class="specialty-head"><div class="specialty-icon" style="background:rgba(16,185,129,0.15);border:1px solid rgba(16,185,129,0.3)">
           <svg viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
         </div>
-        <div class="specialty-title">Macro Photography</div>
+        <div class="specialty-title">Macro Photography</div></span>
         <div class="specialty-desc">Close-up worlds of insects, water droplets, and flower details at 1:1 magnification.</div>
       </div>
       <div class="specialty-card reveal reveal-delay-1">
-        <div class="specialty-icon" style="background:rgba(245,158,11,0.15);border:1px solid rgba(245,158,11,0.3)">
+        <span class="specialty-head"><div class="specialty-icon" style="background:rgba(245,158,11,0.15);border:1px solid rgba(245,158,11,0.3)">
           <svg viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="4"/><line x1="12" y1="20" x2="12" y2="22"/><line x1="4.93" y1="4.93" x2="6.34" y2="6.34"/><line x1="17.66" y1="17.66" x2="19.07" y2="19.07"/><line x1="2" y1="12" x2="4" y2="12"/><line x1="20" y1="12" x2="22" y2="12"/><line x1="4.93" y1="19.07" x2="6.34" y2="17.66"/><line x1="17.66" y1="6.34" x2="19.07" y2="4.93"/></svg>
         </div>
-        <div class="specialty-title">Natural Light</div>
+        <div class="specialty-title">Natural Light</div></span>
         <div class="specialty-desc">No flash. No studio. Just the golden hour, the blue hour, and everything in between.</div>
       </div>
       <div class="specialty-card reveal reveal-delay-2">
-        <div class="specialty-icon" style="background:rgba(139,92,246,0.15);border:1px solid rgba(139,92,246,0.3)">
+        <span class="specialty-head"><div class="specialty-icon" style="background:rgba(139,92,246,0.15);border:1px solid rgba(139,92,246,0.3)">
           <svg viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="2"><rect x="1" y="3" width="15" height="13" rx="2"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
         </div>
-        <div class="specialty-title">Botanical &amp; Floral</div>
+        <div class="specialty-title">Botanical &amp; Floral</div></span>
         <div class="specialty-desc">Wildflowers, garden blooms, and the geometry hiding inside every petal.</div>
       </div>
       <div class="specialty-card reveal reveal-delay-3">
-        <div class="specialty-icon" style="background:rgba(6,182,212,0.15);border:1px solid rgba(6,182,212,0.3)">
+        <span class="specialty-head"><div class="specialty-icon" style="background:rgba(6,182,212,0.15);border:1px solid rgba(6,182,212,0.3)">
           <svg viewBox="0 0 24 24" fill="none" stroke="#06b6d4" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
         </div>
-        <div class="specialty-title">Street &amp; Life</div>
+        <div class="specialty-title">Street &amp; Life</div></span>
         <div class="specialty-desc">Candid moments — kids playing cricket at sunset, fishermen at dawn, the quiet pulse of daily life.</div>
       </div>
     </div>
@@ -158,16 +159,16 @@
       <!-- 2020 -->
       <div class="timeline-item reveal">
         <div class="timeline-year-side" style="display:flex;align-items:center">
-          <div class="timeline-year" style="color:#f800ff">2020</div>
+          <div class="timeline-year" style="color:#ff005e">2020</div>
         </div>
         <div class="timeline-content-side">
           <div class="timeline-content">
-            <div class="timeline-bar" style="background:#f800ff"></div>
+            <div class="timeline-bar" style="background:#ff005e"></div>
             <div class="timeline-title">The Beginning</div>
             <p class="timeline-body">Started with a smartphone and pure curiosity. The first frames: sunflowers reaching toward the sky, insects frozen mid-step on leaves. Something clicked — not just the shutter.</p>
           </div>
         </div>
-        <div class="timeline-dot" style="background:#f800ff;box-shadow:0 0 12px #10b981"></div>
+        <div class="timeline-dot" style="background:#ff005e;box-shadow:0 0 12px #10b981"></div>
       </div>
       
        <!-- 2021 -->
@@ -229,6 +230,21 @@
         </div>
         <div class="timeline-dot" style="background:#f59e0b;box-shadow:0 0 12px #f59e0b"></div>
       </div>
+      
+      <!-- 2025 -->
+      <div class="timeline-item reveal reveal-delay-2">
+        <div class="timeline-year-side" style="display:flex;align-items:center">
+          <div class="timeline-year" style="color:#f800ff">2025</div>
+        </div>
+        <div class="timeline-content-side">
+          <div class="timeline-content">
+            <div class="timeline-bar" style="background:#f800ff"></div>
+            <div class="timeline-title">Minimal Period</div>
+            <p class="timeline-body">This year I don’t know when I captured photo or when I Didn't. It was a busy period. But I didn’t forget to capture at the chance. Always I found a subject to shoot. Yes, This was a different feeling</p>
+          </div>
+        </div>
+        <div class="timeline-dot" style="background:#f800ff;box-shadow:0 0 12px #f59e0b"></div>
+      </div>
 
       <!-- 2026 -->
       <div class="timeline-item reveal reveal-delay-3">
@@ -269,16 +285,26 @@
   <div class="footer-rule"></div>
   <div class="footer-inner">
     <div class="footer-grid">
+      <!-- Brand -->
       <div>
         <a href="index.html" class="logo" style="margin-bottom:20px;display:inline-flex">
-          <div class="logo-img-wrap"><img src="photographer.png" alt="Logo" class="logo-img" style="width:40px;height:40px;margin-right:10px" /></div>
-          <div class="logo-text"><span class="logo-name" style="font-size:1rem">Hussain Mahmud</span><span class="logo-sub">Photography</span></div>
+          <div class="logo-img-wrap"><img src="assets/photographer.png" alt="Logo" class="logo-img" style="width:40px;height:40px;margin-right:10px" /></div>
+          <div class="logo-text">
+            <span class="logo-name" style="font-size:1rem">Hussain Mahmud</span>
+            <span class="logo-sub">Photographer</span>
+          </div>
         </a>
-        <p class="footer-brand-desc">Capturing the extraordinary within the ordinary — macro worlds, harbor silhouettes, and street life from Rajbari, Dhaka, Bangladesh.</p>
-        <div class="footer-contact-row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Rajbari, Dhaka, Bangladesh</div>
-        <a href="mailto:jnm309249@gmail.com" class="footer-contact-row" style="text-decoration:none"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px"><rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="22,4 12,13 2,4"/></svg>jnm309249@gmail.com</a>
+        <p class="footer-brand-desc blur-text">Capturing the extraordinary within the ordinary — macro worlds, harbor silhouettes, and street life from Rajbari, Dhaka, Bangladesh.</p>
+        <div class="footer-contact-row">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          Rajbari, Dhaka, Bangladesh
+        </div>
+        <a href="mailto:jnm309249@gmail.com" class="footer-contact-row" style="text-decoration:none">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="22,4 12,13 2,4"/></svg>
+          jnm309249@gmail.com
+        </a>
       </div>
-      
+      <!-- Explore -->
       <div>
         <h4 class="footer-col-title">Explore</h4>
         <a href="index.html"     class="footer-link"><span class="footer-link-line"></span>Home</a>
@@ -287,35 +313,38 @@
         <a href="contact.html"   class="footer-link"><span class="footer-link-line"></span>Contact</a>
         <a href="stories.html"   class="footer-link"><span class="footer-link-line"></span>Stories</a>
       </div>
-      
+      <!-- Connect -->
       <div>
         <h4 class="footer-col-title">Connect</h4>
         <a href="https://www.facebook.com/hmphoto19graphs?mibextid=ZbWKwL" target="_blank" rel="noopener" class="footer-link"><span class="footer-link-line"></span>Facebook</a>
         <a href="https://www.instagram.com/hmphoto9" target="_blank" rel="noopener" class="footer-link"><span class="footer-link-line"></span>Instagram</a>
         <a href="https://m.me/ch/Abam3cOYRQPn8sER/" target="_blank" rel="noopener" class="footer-link"><span class="footer-link-line"></span>Messenger</a>
       </div>
-     </div>
-      
+      <!-- Thumbs -->
+      <div>
         <h4 class="footer-col-title">Recent Shots</h4>
         <div class="footer-thumbs">
-          <div class="footer-thumb"><img src="Photo4_1776338153984.jpg" alt="" /></div>
-          <div class="footer-thumb"><img src="Photo1_1776338153859.jpg" alt="" /></div>
-          <div class="footer-thumb"><img src="20260318_135147_1776340170896.jpg" alt="" /></div>
-          <div class="footer-thumb"><img src="PXL_20260321_122043556_1776340171117.jpg" alt="" /></div>
-          <div class="footer-thumb"><img src="PXL_20231025_164423266_1776340171141.jpg" alt="" /></div>
-          <div class="footer-thumb"><img src="PXL_20240105_113433807.PORTRAIT_1776340171070.jpg" alt="" /></div>
+          <div class="footer-thumb"><img src="assets/Photo4_1776338153984.jpg" alt="" /></div>
+          <div class="footer-thumb"><img src="assets/Photo1_1776338153859.jpg" alt="" /></div>
+          <div class="footer-thumb"><img src="assets/20260318_135147_1776340170896.jpg" alt="" /></div>
+          <div class="footer-thumb"><img src="assets/PXL_20260321_122043556_1776340171117.jpg" alt="" /></div>
+          <div class="footer-thumb"><img src="assets/PXL_20231025_164423266_1776340171141.jpg" alt="" /></div>
+          <div class="footer-thumb"><img src="assets/PXL_20240105_113433807.PORTRAIT_1776340171070.jpg" alt="" /></div>
         </div>
-        <a href="portfolio.html" class="footer-view-all">View all <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a>
+        <a href="portfolio.html" class="footer-view-all">
+          View all
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        </a>
       </div>
     </div>
     <div class="footer-rule-bottom"></div>
     <div class="footer-bottom">
-      <p class="footer-copyright">© <span id="year"></span> Hussain Mahmud Photography — All rights reserved</p>
-      <p class="footer-tagline text-grad-footer">Rajbari · Dhaka · Bangladesh</p>
+      <p class="footer-copyright blur-text">© <span id="year"></span> Hussain Mahmud Photography — All rights reserved</p>
+      <h6 class="footer-tagline text-grad-footer">Rajbari · Dhaka · Bangladesh</h6>
     </div>
   </div>
 </footer>
 
-<script src="main.js"></script>
+<script src="js/main.js"></script>
 </body>
 </html>

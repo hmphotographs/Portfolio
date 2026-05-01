@@ -19,84 +19,60 @@ function toHtml(txt){ return '<p>'+txt.replace(/\n\n+/g,'</p><p>').replace(/\n/g
 function toText(html){ return html.replace(/<\/p><p>/g,'\n\n').replace(/<\/?p>/g,''); }
 
 /* ── JSONBin ── */
-
-async function loadFromBin() {
-  const grid = G('grid');
-
-  /* Step 1: count বের করো cache থেকে অথবা default */
-  let count = 6;
+/* Read — stories.json থেকে (fast) */
+async function loadStories() {
+  /* Instant: cache থেকে আগে দেখাও */
   const cached = localStorage.getItem('stories_cache');
   if (cached) {
-    try { count = JSON.parse(cached).length; } catch(e) {}
-  }
-
-  /* Step 2: Real card structure render করো — sk-loading class দিয়ে */
-  const fakeStories = Array.from({ length: count }, (_, i) => ({
-    id: i+1, cat: '', eye: String(i+1).padStart(3,'0'),
-    title: '', sub: '', loc: '', season: '',
-    img: '', story: ''
-  }));
-
-  grid.innerHTML = '';
-  fakeStories.forEach((s, i) => {
-    const card = buildCard(s, i);
-    card.classList.add('sk-loading');
-    grid.appendChild(card);
-    requestAnimationFrame(() => io.observe(card));
-  });
-  G('countNum').textContent = count;
-
-  /* Step 3: Cache থেকে instantly দেখাও */
-   if (cached) {
     try {
       stories = JSON.parse(cached);
-      renderReal();
+      render(activeF);
+      updateStats();
+      buildMoodboard();
     } catch(e) {}
-  } 
+  } else {
+    showSkeletons();
+  }
 
-  /* Step 4: Fresh data fetch করো */
+  /* JSON file থেকে fresh data নাও */
   try {
-    const r = await fetch(BIN_URL, { headers: { 'X-Master-Key': API_KEY } });
+    const r = await fetch('stories.json?v=' + Date.now());
     if (!r.ok) throw new Error('HTTP ' + r.status);
-    const json = await r.json();
-    if (Array.isArray(json.record) && json.record.length > 0) {
-      stories = json.record;
-      localStorage.setItem('stories_cache', JSON.stringify(stories));
-      renderReal();
-    } else {
-      await saveToBin(getDefaults());
-    }
+    stories = await r.json();
+    localStorage.setItem('stories_cache', JSON.stringify(stories));
+    render(activeF);
+    updateStats();
   } catch(err) {
-    console.error(err);
+    console.error('Could not load stories.json:', err);
     if (!stories.length) {
-      grid.innerHTML = '<p style="grid-column:span 12;text-align:center;padding:80px 0;color:rgba(243,238,231,0.3);font-style:italic">Could not connect.<br><button onclick="loadFromBin()" style="margin-top:16px;padding:10px 24px;background:rgba(201,169,110,0.15);border:1px solid rgba(201,169,110,0.35);color:#C9A96E;border-radius:999px;cursor:pointer;font-size:0.7rem;letter-spacing:0.3em">Retry</button></p>';
+      G('grid').innerHTML = '<p style="grid-column:span 12;text-align:center;padding:80px 0;color:rgba(243,238,231,0.3);font-style:italic">Could not load stories.<br><button onclick="loadStories()" style="margin-top:16px;padding:10px 24px;background:rgba(201,169,110,0.15);border:1px solid rgba(201,169,110,0.35);color:#C9A96E;border-radius:999px;cursor:pointer;font-size:0.7rem;letter-spacing:0.3em">Retry</button></p>';
       G('countNum').textContent = '0';
     }
   }
   setLoading(false);
 }
 
+/* Write — JSONBin এ (admin only) */
+async function saveToBin(data) {
+  const r = await fetch(BIN_URL, {
+    method:  'PUT',
+    headers: { 'Content-Type': 'application/json', 'X-Master-Key': API_KEY },
+    body:    JSON.stringify(data)
+  });
+  if (!r.ok) throw new Error('Save failed: ' + r.status);
+  stories = data;
+  localStorage.setItem('stories_cache', JSON.stringify(data));
+  render(activeF);
+  updateStats();
+  /* Remind to update stories.json */
+  showToast('Saved ✓ — Download stories.json to update site');
+}
+  
+
 /* Real data এসে গেলে sk-loading সরিয়ে real cards দেখাও */
 function renderReal() {
+  document.querySelectorAll('.sk-text-wrap').forEach(el => el.remove());
   render(activeF);
-}
-
-
-
-async function saveToBin(data){
-  const r=await fetch(BIN_URL,{method:'PUT',headers:{'Content-Type':'application/json','X-Master-Key':API_KEY},body:JSON.stringify(data)});
-  if(!r.ok) throw new Error('Save failed: '+r.status);
-  stories=data; render(activeF);
-}
-function getDefaults(){
-  return [
-    {id:1,cat:'Nature',eye:'001',title:'Lost Inside the Clouds',sub:'At the mountain peak, a silence where sky and earth forget their boundary',loc:'Himalayas, 4200m',season:'Early Autumn',img:'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1400&q=90',story:'<p>I woke at five in the morning. Cup of tea in hand, I found the valley wrapped in cloud.</p><p>I grabbed my camera and climbed the steps. Dew underfoot, pine on the wind. Time felt suspended.</p><p>I pressed the shutter. That sound felt absurdly loud in the mountain silence.</p>'},
-    {id:2,cat:'City',eye:'002',title:'The City Speaks at Night',sub:'Rain-slicked streets under neon',loc:'Prague, Czech Republic',season:'Late November',img:'https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=1200&q=90',story:'<p>After rain the city transforms. Cobblestones shine. I walked out without an umbrella on purpose.</p><p>A figure crossed — red umbrella, yellow raincoat. I watched them double in the water: one real, one upside-down.</p>'},
-    {id:3,cat:'People',eye:'003',title:'The Elder Hands',sub:'Ninety years of living written in every crease',loc:'Sylhet, Bangladesh',season:'Winter',img:'https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?w=1200&q=90',story:'<p>I met her at the village market. Her eyes looked far away.</p><p>I turned the lens toward her hands. Hands that had planted rice, raised children, wiped tears. Every line was a chapter.</p>'},
-    {id:4,cat:'Nature',eye:'004',title:'The Last Colour of Dusk',sub:'The moment that always leaves',loc:'Padma River, Bangladesh',season:'Late Monsoon',img:'https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=1200&q=90',story:'<p>First orange. Then pink. Then a colour arrived with no name in any language I know.</p><p>I held the shutter open. Minutes later it was all gone. But locked in the frame forever.</p>'},
-    {id:5,cat:'Memory',eye:'005',title:'The Empty Chair',sub:'Absence is a presence too',loc:'Dhaka, Bangladesh',season:'Spring',img:'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=1200&q=90',story:'<p>I visited my grandfather room for the first time in months. Only that chair sat empty by the window.</p><p>I raised the camera because this emptiness was also a truth.</p>'},
-    {id:6,cat:'City',eye:'006',title:'The First Rain',sub:'Petrichor and a child laughter',loc:'Chittagong, Bangladesh',season:'Monsoon',img:'https://images.unsplash.com/photo-1534274988757-a28bf1a57c17?w=1200&q=90',story:'<p>For weeks the sun had ruled. Then the sky turned pewter and the children burst into the courtyard.</p><p>They danced in the rain. I photographed them from the balcony. They never noticed.</p>'}
-  ];
 }
 
 
@@ -119,45 +95,7 @@ function getDefaults(){
   bg.style.transform = `translateY(${scroll * 0.25}px)`;
 });
 
-  /* ── Custom Cursor ───────────────────────── */
-  const dot  = document.querySelector('.cursor-dot');
-  const ring = document.querySelector('.cursor-ring');
-  if (dot && ring && window.matchMedia('(pointer: fine)').matches) {
-    let dotX = 0, dotY = 0, ringX = 0, ringY = 0;
-    let mx = 0, my = 0;
-
-    document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
-
-    document.addEventListener('mouseover', e => {
-      const el = e.target.closest('a, button, [role="button"], input, textarea, select, label');
-      if (el) {
-        ring.classList.add('hovering');
-      } else {
-        ring.classList.remove('hovering');
-      }
-    });
-
-    document.addEventListener('mousedown', () => dot.classList.add('clicking'));
-    document.addEventListener('mouseup',   () => dot.classList.remove('clicking'));
-    document.addEventListener('mouseleave', () => { dot.style.opacity = '0'; ring.style.opacity = '0'; });
-    document.addEventListener('mouseenter', () => { dot.style.opacity = '1'; ring.style.opacity = '1'; });
-
-    function animateCursor() {
-      dotX  += (mx - dotX) * 0.9;
-      dotY  += (my - dotY) * 0.9;
-      ringX += (mx - ringX) * 0.12;
-      ringY += (my - ringY) * 0.12;
-
-      dot.style.left  = dotX  + 'px';
-      dot.style.top   = dotY  + 'px';
-      ring.style.left = ringX + 'px';
-      ring.style.top  = ringY + 'px';
-
-      requestAnimationFrame(animateCursor);
-    }
-    animateCursor();
-  }
-
+ 
   /* ── Scroll Progress Bar ─────────────────── */
   const progressBar = document.querySelector('.scroll-progress');
   if (progressBar) {
@@ -241,7 +179,31 @@ function buildCard(s,i){
   card.setAttribute('role','button');
   card.style.animationDelay=(i%4)*0.09+'s';
   card.dataset.cat=s.cat;
-  card.innerHTML='<div class="card-photo"><img src="'+s.img+'" alt="'+s.title+'" loading="lazy"/><div class="card-overlay"></div><div class="card-line"></div><span class="card-chip">'+s.cat+'</span><span class="card-index">'+s.eye+'</span><div class="card-text"><div class="card-loc">'+(s.loc||'')+'</div><h2 class="card-title">'+s.title+'</h2><p class="card-sub">'+(s.sub||'')+'</p><div class="card-action"><span class="card-cta">Read Story</span><span class="card-arrow">&#8594;</span></div></div></div>';
+  card.innerHTML='<div class="card-photo"><img src="'+s.img+'" alt="'+s.title+'" loading="lazy"/><div class="card-overlay"></div><div class="card-line"></div><span class="card-chip">'+s.cat+'</span><span class="card-index">'+s.eye+'</span><div class="card-text"><div class="card-loc">'+(s.loc||'')+'</div><h2 class="card-title">'+s.title+'</h2><p class="card-sub">'+(s.sub||'')+'</p><div class="card-action"><span class="card-cta">Read Story</span><span class="card-arrow">&#8594;</span></div></div></div><div class="card-light"></div>';
+  
+  
+  card.addEventListener('click', ev => {
+  spawnParticles(ev.clientX, ev.clientY);
+  setTimeout(() => openModal(s), 180);
+});
+  
+  /* Blur-up effect */
+const img = card.querySelector('img');
+img.classList.add('blur-loading');
+img.addEventListener('load', () => {
+  img.classList.remove('blur-loading');
+  img.classList.add('blur-loaded');
+});
+img.addEventListener('error', () => {
+  img.classList.remove('blur-loading');
+  img.classList.add('blur-loaded');
+});
+/* যদি আগেই cached হয়ে থাকে */
+if (img.complete && img.naturalWidth > 0) {
+  img.classList.remove('blur-loading');
+  img.classList.add('blur-loaded');
+}
+  
   card.addEventListener('click',()=>openModal(s));
   card.addEventListener('keydown',ev=>{if(ev.key==='Enter'||ev.key===' '){ev.preventDefault();openModal(s);}});
   return card;
@@ -264,6 +226,7 @@ G('filterTabs').addEventListener('click',ev=>{
   const tab=ev.target.closest('.ftab'); if(!tab)return;
   document.querySelectorAll('.ftab').forEach(t=>t.classList.remove('on'));
   tab.classList.add('on'); activeF=tab.dataset.f; render(activeF);
+  
 });
 
 /* ── modal ── */
@@ -289,10 +252,22 @@ function fillModal(s,list){
     G('modalPrev').disabled=cur===0; G('modalNext').disabled=cur===list.length-1;
     img.src=s.img; img.onload=()=>{img.style.opacity='1';};
     scroll.style.transform='translateY(-10px)';
+    
+    /* EXIF data */
+const exifEye    = document.getElementById('exifEye');
+const exifLoc    = document.getElementById('exifLoc');
+const exifSeason = document.getElementById('exifSeason');
+const exifCat    = document.getElementById('exifCat');
+if (exifEye)    exifEye.textContent    = 'No. ' + (s.eye || '—');
+if (exifLoc)    exifLoc.textContent    = s.loc    || '—';
+if (exifSeason) exifSeason.textContent = s.season || '—';
+if (exifCat)    exifCat.textContent    = s.cat    || '—';
+
+
     requestAnimationFrame(()=>requestAnimationFrame(()=>{scroll.style.opacity='1';scroll.style.transform='translateY(0)';}));
   },220);
 }
-function closeModal(){modalWrap.classList.remove('open');document.body.style.overflow='';}
+function closeModal(){modalWrap.classList.remove('open');document.body.style.overflow='';document.getElementById('modalBg').style.background = '';}
 G('modalClose').addEventListener('click',closeModal);
 modalBg.addEventListener('click',closeModal);
 G('modalPrev').addEventListener('click',()=>{const l=getFL();if(cur>0){cur--;fillModal(l[cur],l);}});
@@ -387,7 +362,7 @@ function refreshList(){
   if(!stories.length){el.innerHTML='<p style="color:rgba(243,238,231,0.25);font-style:italic;padding:20px 0">No stories yet.</p>';return;}
   stories.forEach(s=>{
     const item=document.createElement('div'); item.className='story-list-item';
-    item.innerHTML='<img class="sli-thumb" src="'+s.img+'" alt=""/><div class="sli-info"><div class="sli-title">'+s.title+'</div><div class="sli-meta">'+s.cat+(s.loc?' &middot; '+s.loc:'')+'</div></div><div class="sli-actions"><button class="sli-btn" data-edit="'+s.id+'">&#9998;</button><button class="sli-btn del" data-del="'+s.id+'">&#128465;</button></div>';
+    item.innerHTML='<img class="sli-thumb" src="'+s.img+'" alt="" loading="lazy"/><div class="sli-info"><div class="sli-title">'+s.title+'</div><div class="sli-meta">'+s.cat+(s.loc?' &middot; '+s.loc:'')+'</div></div><div class="sli-actions"><button class="sli-btn" data-edit="'+s.id+'">&#9998;</button><button class="sli-btn del" data-del="'+s.id+'">&#128465;</button></div>';
     el.appendChild(item);
   });
   el.addEventListener('click',ev=>{
@@ -461,5 +436,301 @@ document.addEventListener('keydown',ev=>{
   if(ev.key==='ArrowLeft')G('modalPrev').click();
 });
 
+
+/* ------ Particle Brust ------ */
+
+
+function spawnParticles(x, y) {
+  const colors = ['#C9A96E','#E8C98A','#ffffff',
+                  'rgba(201,169,110,0.8)','rgba(232,201,138,0.9)'];
+  const count  = 24;
+  for (let i = 0; i < count; i++) {
+    const p      = document.createElement('div');
+    p.className  = 'particle';
+    const angle  = (i / count) * Math.PI * 2 + (Math.random() - 0.5) * 0.4;
+    const dist   = 35 + Math.random() * 110;
+    const size   = 3 + Math.random() * 7;
+    const dur    = 0.5 + Math.random() * 0.5;
+    const delay  = Math.random() * 0.12;
+    const color  = colors[Math.floor(Math.random() * colors.length)];
+    p.style.cssText = `
+      left:${x}px; top:${y}px;
+      width:${size}px; height:${size}px;
+      background:${color};
+      --tx:${Math.cos(angle)*dist}px;
+      --ty:${Math.sin(angle)*dist}px;
+      --dur:${dur}s;
+      animation-delay:${delay}s;
+      box-shadow:0 0 ${size*2}px ${color}, 0 0 ${size*4}px rgba(201,169,110,0.3);
+    `;
+    document.body.appendChild(p);
+    setTimeout(() => p.remove(), (dur + delay) * 1000 + 100);
+  }
+}
+
+/* magnetic fab */
+
+(function initMagneticFab() {
+  const fab = document.getElementById('adminFab');
+  if (!fab) return;
+  fab.addEventListener('mousemove', ev => {
+    const r  = fab.getBoundingClientRect();
+    const cx = r.left + r.width  / 2;
+    const cy = r.top  + r.height / 2;
+    const dx = (ev.clientX - cx) * 0.35;
+    const dy = (ev.clientY - cy) * 0.35;
+    fab.style.transform = `translate(${dx}px, ${dy}px) scale(1.1)`;
+  });
+  fab.addEventListener('mouseleave', () => {
+    fab.style.transform = '';
+  });
+})();
+
+
+/* Theme changing */
+
+const themes = [
+  { //Orange-y
+  title: "#ffdc00",
+  subtitle: "#000000",
+  grad: "linear-gradient(90deg, #BF0FFF, #CBFF49)"
+  },
+  { //green
+  title: "#aab2ff",
+  subtitle: "#000000",
+  grad: "linear-gradient(90deg, #84FFC9, #AAB2FF, #ECA0FF)"
+  },
+  { //l-green-y
+  title: "#c5f9d7",
+  subtitle: "#000000",
+  grad: "linear-gradient(90deg, #C5F9D7, #F7D486, #F27A7D)"
+  },
+  { //violate
+  title: "#f5c900",
+  subtitle: "#000000",
+  grad: "linear-gradient(90deg, #F5C900, #183182)"
+  },
+  
+];
+
+function applyRandomTheme() {
+  const theme = themes[Math.floor(Math.random() * themes.length)];
+  const root = document.documentElement;
+
+  root.style.setProperty('--gold', theme.title);
+  root.style.setProperty('--gold2', theme.subtitle);
+  root.style.setProperty('--grad-1', theme.grad);
+}
+
+applyRandomTheme();
+
+(function initReadProgress() {
+  const scroll = document.getElementById('mScroll');
+  const bar    = document.getElementById('readProgress');
+  if (!scroll || !bar) return;
+  scroll.addEventListener('scroll', () => {
+    const max = scroll.scrollHeight - scroll.clientHeight;
+    const pct = max > 0 ? (scroll.scrollTop / max) * 100 : 0;
+    bar.style.width = Math.min(pct, 100) + '%';
+  }, { passive: true });
+
+  /* Reset on each story open */
+  const origOpen = window.openModal;
+  if (origOpen) {
+    window.openModal = function(s) {
+      bar.style.width = '0%';
+      origOpen(s);
+    };
+  }
+})();
+
+(function initRotatingQuotes() {
+  const quotes = [
+    "Some pictures are not taken to show the world, but to remember how it felt.",
+    "Photography is the art of frozen time — the ability to store emotion and feelings within a frame.",
+    "A photograph is a secret about a secret. The more it tells you, the less you know.",
+    "In photography there is a reality so subtle that it becomes more real than reality.",
+    "Every photograph is a certificate of presence.",
+    "The camera is an instrument that teaches people how to see without a camera.",
+    "Light makes photography. Embrace light. Admire it. Love it. But above all, know light.",
+  ];
+
+  const el  = document.querySelector('.q-text');
+  if (!el) return;
+
+  let idx = 0;
+
+  setInterval(() => {
+    el.classList.add('fading');
+    setTimeout(() => {
+      idx = (idx + 1) % quotes.length;
+      el.textContent = quotes[idx];
+      el.classList.remove('fading');
+    }, 600);
+  }, 5000);
+})();
+
+
+/* numbers */
+
+function updateStats() {
+  const total = stories.length;
+  const cats  = new Set(stories.map(s => s.cat)).size;
+  const locs  = new Set(stories.map(s => s.loc).filter(Boolean)).size;
+
+  function countUp(el, target, dur) {
+    if (!el) return;
+    let start = 0;
+    const step = target / (dur / 16);
+    const timer = setInterval(() => {
+      start += step;
+      if (start >= target) { el.textContent = target; clearInterval(timer); }
+      else { el.textContent = Math.floor(start); }
+    }, 16);
+  }
+
+  const row = document.getElementById('statsRow');
+  if (!row) return;
+
+  const observer = new IntersectionObserver(entries => {
+    if (!entries[0].isIntersecting) return;
+    observer.disconnect();
+    row.querySelectorAll('.stat-item').forEach((el, i) => {
+      setTimeout(() => el.classList.add('visible'), i * 120);
+    });
+    countUp(document.getElementById('statStories'), total, 1200);
+    countUp(document.getElementById('statCats'),    cats,  900);
+    countUp(document.getElementById('statLocs'),    locs,  1000);
+  }, { threshold: 0.3 });
+
+  observer.observe(row);
+}
+
+/* mood strip */
+
+function buildMoodboard() {
+  const wrap = document.getElementById('moodboard');
+  if (!wrap || !stories.length) return;
+  wrap.innerHTML = '';
+
+  /* id দিয়ে sort করে সর্বশেষ ৫টা নাও */
+  const sorted = [...stories].sort((a, b) => b.id - a.id);
+  const items  = sorted.slice(0, 5).reverse();
+
+  items.forEach(s => {
+    const el = document.createElement('div');
+    el.className = 'mood-item';
+    el.innerHTML = `
+      <img src="${s.img}" alt="${s.title}" loading="lazy"/>
+      <div class="mood-label">${s.title}</div>
+    `;
+    el.addEventListener('click', () => openModal(s));
+    wrap.appendChild(el);
+  });
+}
+
+/* blur text */
+
+(function () {
+  const selectors = [
+    '.blur-text-s',
+    '.q-text',
+    '.hero-sub',
+    '.card-loc',
+  ];
+
+  /* এই class গুলো থাকলে ভেতরে ঢুকবে না */
+  const skipClasses = ['text-grad-vivid', 'text-grad', 'br-word'];
+
+  function shouldSkip(node) {
+    return skipClasses.some(c => node.classList && node.classList.contains(c));
+  }
+
+  function wrapTextOnly(el) {
+    const nodes = [...el.childNodes];
+    nodes.forEach(node => {
+      if (node.nodeType === Node.TEXT_NODE) {
+        const text = node.textContent;
+        if (!text.trim()) return;
+        const frag = document.createDocumentFragment();
+        text.split(/(\s+)/).forEach(part => {
+          if (!part) return;
+          if (/^\s+$/.test(part)) {
+            frag.appendChild(document.createTextNode(part));
+          } else {
+            const span = document.createElement('span');
+            span.className   = 'br-word';
+            span.textContent = part;
+            frag.appendChild(span);
+          }
+        });
+        node.replaceWith(frag);
+
+      } else if (node.nodeType === Node.ELEMENT_NODE) {
+        if (shouldSkip(node)) {
+          /* পুরো element টাকে একটা br-word unit বানাও,
+             ভেতরে ঢুকবে না — gradient intact থাকবে */
+          node.classList.add('br-word');
+        } else {
+          wrapTextOnly(node);
+        }
+      }
+    });
+  }
+
+  selectors.forEach(sel => {
+    document.querySelectorAll(sel).forEach(el => wrapTextOnly(el));
+  });
+
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      entry.target.querySelectorAll('.br-word').forEach((w, i) => {
+        setTimeout(() => w.classList.add('visible'), i * 42);
+      });
+      io.unobserve(entry.target);
+    });
+  }, { threshold: 0.12, rootMargin: '-10px 0px' });
+
+  selectors.forEach(sel => {
+    document.querySelectorAll(sel).forEach(el => io.observe(el));
+  });
+})();
+
+
+/* ── Typewriter for About Hero Label ─── */
+const typewriterEl = document.querySelector('.hero-eyebrow');
+if (typewriterEl) {
+  const text = typewriterEl.textContent.trim();
+  typewriterEl.textContent = '';
+  typewriterEl.style.borderRight = '1px solid currentColor';
+  let i = 0;
+  const type = () => {
+    if (i < text.length) {
+      typewriterEl.textContent += text[i++];
+      setTimeout(type, 60);
+    } else {
+      setTimeout(() => typewriterEl.style.borderRight = 'none', 800);
+    }
+  };
+  setTimeout(type, 600); // navbar load হওয়ার পর start
+}
+
+
+/* cursor trail */
+
+let lastTrailTime = 0;
+document.addEventListener('mousemove', e => {
+  const now = Date.now();
+  if (now - lastTrailTime < 40) return; // throttle: 25fps
+  lastTrailTime = now;
+  const dot = document.createElement('div');
+  dot.className = 'trail-dot';
+  dot.style.left = e.clientX + 'px';
+  dot.style.top  = e.clientY + 'px';
+  document.body.appendChild(dot);
+  setTimeout(() => dot.remove(), 700);
+});
+
 /* ── boot ── */
-loadFromBin();
+loadStories();
