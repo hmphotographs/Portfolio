@@ -61,6 +61,21 @@ textarea, input, select { font-family: inherit; }
   opacity: 0.45;
 }
 
+/* Chrome, Edge, Safari */
+.container::-webkit-scrollbar {
+  display: none;
+}
+
+/* Firefox */
+.container {
+  scrollbar-width: none;
+}
+
+/* IE / old Edge */
+.container {
+  -ms-overflow-style: none;
+}
+
 
 /* ══════════════════════════════════════════════
    KEYFRAME ANIMATIONS
