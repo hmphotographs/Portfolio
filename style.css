@@ -28,6 +28,16 @@
   
 }
 
+/* ── Scrollbar hide — all ─────────────────── */
+* {
+  scrollbar-width: none;        /* Firefox */
+  -ms-overflow-style: none;     /* IE/Edge */
+}
+*::-webkit-scrollbar {
+  display: none;                /* Chrome/Safari */
+}
+
+
 /* ── Reset ─────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
@@ -1429,7 +1439,7 @@ width: 100%;
   padding: 0px 15px;
 }
 
-.filter-btn:hover {
+.filter-btn {
   background: rgba(0,0,0, 0.7);
   box-shadow:
     0 4px 12px rgba(0,0,0,0.6),
