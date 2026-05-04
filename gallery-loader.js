@@ -17,7 +17,7 @@
     console.error('[Gallery Loader]', err);
     return;
   }
-
+ 
   /* ── 2. Grid Build ────────────────────────── */
   const grid = document.querySelector('.masonry-grid');
   if (!grid) { console.error('[Gallery Loader] .masonry-grid পাওয়া যায়নি'); return; }
@@ -378,11 +378,12 @@ window.addEventListener('resize', () => {
 const heroTotalEl = document.getElementById('heroTotal');
 if (heroTotalEl) heroTotalEl.textContent = photos.length;
 
-  console.log(`[Gallery Loader] ${photos.length}টি photo load হয়েছে।`);
-
 
 const heroTotalEl2 = document.getElementById('heroTotal2');
 if (heroTotalEl2) heroTotalEl2.textContent = photos.length;
+
+
+    initPrintShop(photos);
 
   console.log(`[Gallery Loader] ${photos.length}টি photo load হয়েছে।`);
 
@@ -469,3 +470,100 @@ if (window.innerWidth < 768) {
     requestAnimationFrame(autoScroll);
   }
 }
+
+
+
+/* ══════════════════════════════════════════════
+   PRINT SHOP + MAP — photos passed as argument
+══════════════════════════════════════════════ */
+function initPrintShop(photos) {
+  const WHATSAPP = '8801XXXXXXXXX';
+  const EMAIL    = 'hussain@example.com';
+
+  const grid  = document.getElementById('printGrid');
+  const modal = document.getElementById('printModal');
+  if (!grid || !modal) return;
+
+  const printPhotos = photos.slice(0, 6);
+
+  printPhotos.forEach(photo => {
+    const src  = convertDriveUrl(photo.src);
+    const card = document.createElement('div');
+    card.className = 'print-card';
+    card.innerHTML = `
+      <div class="print-card-img-wrap">
+        <img src="${src}" alt="${escapeHtml(photo.title)}" loading="lazy"/>
+      </div>
+      <div class="print-card-info">
+        <div class="print-card-title">${escapeHtml(photo.title)}</div>
+        <div class="print-card-cat">${escapeHtml(photo.category)}</div>
+      </div>
+      <div class="print-card-btn">Inquire Print</div>
+    `;
+    card.addEventListener('click', () => openPrintModal(photo, src));
+    grid.appendChild(card);
+  });
+
+  const modalImg   = document.getElementById('printModalImg');
+  const modalTitle = document.getElementById('printModalTitle');
+  const waBtn      = document.getElementById('printWaBtn');
+  const emailBtn   = document.getElementById('printEmailBtn');
+  const closeBtn   = document.getElementById('printModalClose');
+  const backdrop   = document.getElementById('printModalBackdrop');
+
+  let selectedSize  = 'A4';
+  let selectedPaper = 'Matte';
+
+  document.querySelectorAll('.print-option-btns').forEach(group => {
+    group.querySelectorAll('.print-opt').forEach(btn => {
+      btn.addEventListener('click', () => {
+        group.querySelectorAll('.print-opt').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        if (group.id === 'printSizeGroup')  selectedSize  = btn.dataset.val;
+        if (group.id === 'printPaperGroup') selectedPaper = btn.dataset.val;
+        updateLinks();
+      });
+    });
+  });
+
+  function updateLinks() {
+    const title   = modalTitle?.textContent || '';
+    const msg     = `Hi Hussain! I'm interested in a print of "${title}" — Size: ${selectedSize}, Paper: ${selectedPaper}.`;
+    if (waBtn)    waBtn.href    = `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(msg)}`;
+    if (emailBtn) emailBtn.href = `mailto:${EMAIL}?subject=Print Inquiry — ${encodeURIComponent(title)}&body=${encodeURIComponent(msg)}`;
+  }
+
+  function openPrintModal(photo, src) {
+  if (modalImg)   modalImg.src           = src;
+  if (modalTitle) modalTitle.textContent = photo.title;
+  updateLinks();
+
+  // Modal কে body তে move করো — যেকোনো parent এর বাইরে
+  document.body.appendChild(modal);
+
+  modal.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+  function closePrintModal() {
+    modal.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  closeBtn?.addEventListener('click', closePrintModal);
+  backdrop?.addEventListener('click', closePrintModal);
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closePrintModal();
+  });
+}
+
+
+
+
+
+
+
+
+
+
+
