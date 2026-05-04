@@ -200,6 +200,183 @@
       
     </div><!-- end masonry-grid -->
   </div>
+
+<!-- The One Frame -->
+<section class="one-frame-section reveal">
+
+  <div class="one-frame-header">
+    <span class="one-frame-label">
+      <span class="one-frame-label-line"></span>
+      The One Frame
+      <span class="one-frame-label-line"></span>
+    </span>
+    <p class="one-frame-sub-1">One <span class="text-grad-vivid">Photograph</span></p>
+    <p class="one-frame-sub">This month's most personal capture.</p>
+  </div>
+
+  <div class="one-frame-body">
+
+    <!-- Photo -->
+    <div class="one-frame-img-wrap">
+      <img
+        src="assets/PXL_20260321_124444527_1776340171089.jpg"
+        alt="Yellow Solitude"
+        class="one-frame-img"
+      />
+      <div class="one-frame-img-overlay"></div>
+      <div class="one-frame-badge">May 2026</div>
+    </div>
+
+    <!-- Note -->
+    <div class="one-frame-note">
+      <div class="one-frame-note-top">
+        <span class="one-frame-note-num">001</span>
+        <span class="one-frame-note-cat">Floral</span>
+      </div>
+      <h2 class="one-frame-title">Yellow <span class="text-grad-vivid" style="font-style: italic;">Solitude</span></h2>
+      <p class="one-frame-body-text blur-text">
+        It was past noon and the light was wrong by every standard rule —
+        harsh, flat, unforgiving. But this bloom had turned away from everything,
+        facing a direction no one expected. I waited twenty minutes for a cloud
+        that never came. Then I pressed anyway.
+        Sometimes the wrong light finds the <span class="text-grad-vivid" style="font-style: italic;">right moment</span>.
+      </p>
+      <div class="one-frame-meta">
+        <div class="one-frame-meta-item">
+          <span class="one-frame-meta-label">Location</span>
+          <span class="one-frame-meta-val">Rajbari, Dhaka</span>
+        </div>
+        <div class="one-frame-meta-item">
+          <span class="one-frame-meta-label">Time</span>
+          <span class="one-frame-meta-val">12:44 PM</span>
+        </div>
+        <div class="one-frame-meta-item">
+          <span class="one-frame-meta-label">Wait</span>
+          <span class="one-frame-meta-val">~20 min</span>
+        </div>
+      </div>
+      <div class="one-frame-sig">— Hussain Mahmud</div>
+    </div>
+
+  </div>
+
+</section>
+
+<!-- Print Shop -->
+<section class="print-section reveal">
+
+  <div class="print-header">
+    <span class="print-eyebrow">
+      <span class="print-eyebrow-line"></span>
+      Limited Prints
+      <span class="print-eyebrow-line"></span>
+    </span>
+    <h2 class="print-title">Own a <em class="text-grad-vivid">Frame</em></h2>
+    <p class="print-sub blur-text">
+      Fine art prints — personally reviewed and dispatched.<br>
+      Each print is signed and numbered.
+    </p>
+  </div>
+
+  <div class="print-grid" id="printGrid">
+    <!-- JS দিয়ে gallery.json থেকে build হবে -->
+  </div>
+
+  <div class="print-note">
+    <div class="print-note-inner">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+           stroke="rgba(255,255,255,0.3)" stroke-width="2">
+        <circle cx="12" cy="12" r="10"/>
+        <line x1="12" y1="8" x2="12" y2="12"/>
+        <line x1="12" y1="16" x2="12.01" y2="16"/>
+      </svg>
+      <span>Inquiry via WhatsApp or email. Response within 24 hours.</span>
+    </div>
+  </div>
+
+  <!-- Print inquiry modal -->
+  <div class="print-modal" id="printModal">
+    <div class="print-modal-box">
+      <button class="print-modal-close" id="printModalClose">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+          <line x1="18" y1="6" x2="6" y2="18"/>
+          <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+
+      <div class="print-modal-img-wrap">
+        <img id="printModalImg" src="" alt="" />
+      </div>
+
+      <div class="print-modal-info">
+        <div class="print-modal-label">Print Inquiry</div>
+        <h3 class="print-modal-title" id="printModalTitle"></h3>
+
+        <div class="print-modal-options">
+          <div class="print-option-group">
+            <span class="print-option-label">Size</span>
+            <div class="print-option-btns" id="printSizeGroup">
+              <button class="print-opt active" data-val="A4">A4</button>
+              <button class="print-opt" data-val="A3">A3</button>
+              <button class="print-opt" data-val="A2">A2</button>
+              <button class="print-opt" data-val="Custom">Custom</button>
+            </div>
+          </div>
+          <div class="print-option-group">
+            <span class="print-option-label">Paper</span>
+            <div class="print-option-btns" id="printPaperGroup">
+              <button class="print-opt active" data-val="Matte">Matte</button>
+              <button class="print-opt" data-val="Glossy">Glossy</button>
+              <button class="print-opt" data-val="Fine Art">Fine Art</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="print-modal-actions">
+          <a class="print-wa-btn" id="printWaBtn" href="#" target="_blank">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+              <path d="M12 0C5.373 0 0 5.373 0 12c0 2.136.564 4.14 1.546 5.877L.057 23.943l6.204-1.49A11.945 11.945 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 01-5.006-1.368l-.36-.214-3.713.893.924-3.618-.235-.372A9.818 9.818 0 1112 21.818z"/>
+            </svg>
+            Inquire on WhatsApp
+          </a>
+          <a class="print-email-btn" id="printEmailBtn" href="#" target="_blank">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="2">
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+              <polyline points="22,6 12,13 2,6"/>
+            </svg>
+            Send Email
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="print-modal-backdrop" id="printModalBackdrop"></div>
+  </div>
+</section>
+
+<!-- gst -->
+
+<section class="gts-section reveal">
+
+  <div class="gts-header">
+    <span class="gts-eyebrow">
+      <span class="gts-eyebrow-line"></span>
+      Shories of Photos
+      <span class="gts-eyebrow-line"></span>
+    </span>
+    <h2 class="gts-title">Read <em class="text-grad-vivid">Stories</em>.</h2>
+    <p class="gts-sub blur-text">Every photo have different story, about the capturing moments.</p>
+  </div>
+
+  <div class="btn-box"><a href="contact.html" class="btn-outline reveal reveal-delay-3">
+      <span class="text-grad-vivid">See the stories</span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+    </a></div>
+ 
+
+</section>
+   
 </main>
 
 <footer>
