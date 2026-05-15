@@ -3953,3 +3953,49 @@ select:-webkit-autofill {
   transform: translateY(0);
   filter: blur(0px);
 }
+
+html, body {
+  overscroll-behavior-y: none;
+}
+
+/* ── Pull to Refresh ─────────────────────── */
+#ptr-indicator {
+  position: fixed;
+  top: 14px;
+  left: 50%;
+  z-index: 9999;
+  width: 42px; height: 42px;
+  transform: translateX(-50%) translateY(-80px) scale(0.8);
+  opacity: 0;
+  pointer-events: none;
+
+  /* glass blur — dark but transparent */
+  backdrop-filter: blur(16
+      ) saturate(1.4);
+  -webkit-backdrop-filter: blur(20px) saturate(1.4);
+  border-radius: 50%;
+
+  transition:
+    transform 0.45s cubic-bezier(0.16,1,0.3,1),
+    opacity   0.35s ease,
+    filter    0.35s ease;
+
+  filter: drop-shadow(0 4px 16px rgba(109,40,217,0));
+}
+#ptr-indicator.visible {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0px) scale(1);
+  filter: drop-shadow(0 4px 20px rgba(109,40,217,0));
+  background: transparent;
+}
+#ptr-indicator.releasing {
+  filter: drop-shadow(0 6px 28px rgba(124,58,237,0.55));
+}
+#ptr-indicator.refreshing {
+  filter: drop-shadow(0 6px 32px rgba(124,58,237,0.65));
+  display: block;
+}
+
+#ptr-ring {
+  transition: stroke-dashoffset 0.06s linear;
+}
