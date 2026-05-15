@@ -586,6 +586,100 @@ if (portTitle2) {
 }
 
 
+(function () {
+  const el        = document.getElementById('ptr-indicator');
+  const ring      = document.getElementById('ptr-ring');
+  const ringGroup = document.getElementById('ptr-ring-group');
+  const arrow     = document.getElementById('ptr-arrow');
+  if (!el) return;
+
+  const CIRCUM    = 113.1;
+  const THRESHOLD = 75;
+  const MAX_PULL  = 100;
+
+  let startY   = 0;
+  let pulling  = false;
+  let pullDist = 0;
+  let spinRAF  = null;
+  let spinning = false;
+
+  function setProgress(p) {
+    ring.style.transition = 'stroke-dashoffset 0.06s linear';
+    ring.setAttribute('stroke-dashoffset', CIRCUM * (1 - Math.min(p, 1)));
+  }
+
+  function setArrow(progress) {
+  const deg = progress * 180;
+  arrow.setAttribute('transform', `rotate(${deg}, 24, 24)`);
+  arrow.style.opacity = '0.95'; // সবসময় visible
+}
+
+  function startSpin() {
+    spinning = true;
+    let angle = -90;
+    function loop() {
+      if (!spinning) return;
+      angle += 6;
+      ringGroup.setAttribute('transform', `rotate(${angle}, 24, 24)`);
+      spinRAF = requestAnimationFrame(loop);
+    }
+    requestAnimationFrame(loop);
+  }
+
+  function stopSpin() {
+    spinning = false;
+    cancelAnimationFrame(spinRAF);
+    ringGroup.setAttribute('transform', 'rotate(-90, 24, 24)');
+  }
+
+  document.addEventListener('touchstart', e => {
+    if (window.scrollY > 4) return;
+    startY   = e.touches[0].clientY;
+    pulling  = true;
+    pullDist = 0;
+  }, { passive: true });
+
+  document.addEventListener('touchmove', e => {
+    if (!pulling) return;
+    pullDist = e.touches[0].clientY - startY;
+    if (pullDist <= 0) { el.classList.remove('visible'); return; }
+
+    const p = Math.min(pullDist / MAX_PULL, 1);
+    el.classList.add('visible');
+    el.classList.toggle('releasing', pullDist >= THRESHOLD);
+    setProgress(p);
+    setArrow(p);
+  }, { passive: true });
+
+  document.addEventListener('touchend', () => {
+    if (!pulling) return;
+    pulling = false;
+
+    if (pullDist >= THRESHOLD) {
+      el.classList.add('refreshing');
+      el.classList.remove('releasing');
+      setProgress(1);
+      setArrow(1);
+      ring.style.transition = 'none';
+      ring.setAttribute('stroke-dashoffset', '0');
+      startSpin();
+      setTimeout(() => {
+        stopSpin();
+        window.location.reload();
+      }, 650);
+
+    } else {
+      el.classList.remove('releasing');
+      ring.style.transition = 'stroke-dashoffset 0.4s cubic-bezier(0.16,1,0.3,1)';
+      ring.setAttribute('stroke-dashoffset', CIRCUM);
+      setArrow(0);
+      setTimeout(() => {
+        el.classList.remove('visible');
+      }, 420);
+    }
+    pullDist = 0;
+  });
+})();
 
 applyRandomTheme();
 
