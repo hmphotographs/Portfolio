@@ -434,6 +434,78 @@
   </div>
 </footer>
 
+  <div id="ptr-indicator">
+  <svg id="ptr-svg" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="pg" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%"   stop-color="#4c1d95"/>
+        <stop offset="100%" stop-color="#7c3aed"/>
+      </linearGradient>
+      <filter id="pglow" x="-30%" y="-30%" width="160%" height="160%">
+        <feGaussianBlur stdDeviation="1.2" result="b"/>
+        <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+      </filter>
+    </defs>
+
+    <!-- Glass base — no fill, blur comes from CSS -->
+    <circle cx="24" cy="24" r="20"
+      fill="rgba(255,255,255,0.04)"/>
+
+    <!-- Inner rim -->
+    <circle cx="24" cy="24" r="20"
+      fill="none"
+      stroke="rgba(255,255,255,0.08)"
+      stroke-width="0.6"/>
+
+    <!-- Track -->
+    <circle cx="24" cy="24" r="18"
+      fill="none"
+      stroke="rgba(255,255,255,0.05)"
+      stroke-width="1.2"/>
+
+    <!-- Progress arc -->
+   <!-- Progress arc — group দিয়ে wrap -->
+<g id="ptr-ring-group" transform="rotate(-90, 24, 24)">
+  <circle id="ptr-ring" cx="24" cy="24" r="18"
+    fill="none"
+    stroke="url(#pg)"
+    stroke-width="1.4"
+    stroke-linecap="round"
+    stroke-dasharray="113.1"
+    stroke-dashoffset="113.1"
+    filter="url(#pglow)"/>
+</g>
+
+    <!-- Arrow -->
+    <g id="ptr-arrow">
+  <!-- dark outline — ring glow থেকে আলাদা করে -->
+  <path d="M24 16 L24 27"
+    stroke="rgba(87, 7, 140,0.4)"
+    stroke-width="4.5"
+    stroke-linecap="round"
+    fill="none"/>
+  <path d="M19.5 23 L24 29 L28.5 23"
+    stroke="rgba(87, 7, 140,0.4)"
+    stroke-width="4.5"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    fill="none"/>
+  <!-- white top -->
+  <path d="M24 16 L24 27"
+    stroke="rgba(255,255,255,0.95)"
+    stroke-width="2.5"
+    stroke-linecap="round"
+    fill="none"/>
+  <path d="M19.5 23 L24 29 L28.5 23"
+    stroke="rgba(255,255,255,0.95)"
+    stroke-width="2.5"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    fill="none"/>
+</g>
+  </svg>
+  </div>
+
 <script src="main.js"></script>
 
 </body>
