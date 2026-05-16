@@ -157,7 +157,7 @@
     "src": "Photo-1111.png",
     "span": "",
     "new": false,
-    "exif": { "aperture": "1.6", "shutter": "1/60s", "iso": "502", "location": "Rajbari, Dhaka" }
+    "exif": { "aperture": "", "shutter": "", "iso": "", "location": "Rajbari, Dhaka" }
   },
   {
     "title": "Blooming Silence",
@@ -165,6 +165,6 @@
     "src": "PXL_20240221_172247915 (1).jpg",
     "span": "",
     "new": false,
-    "exif": { "aperture": "", "shutter": "", "iso": "", "location": "Rajbari, Dhaka" }
+    "exif": { "aperture": "", "shutter": "", "iso": "", "location": "Kushtia, Dhaka" }
   }
 ]
